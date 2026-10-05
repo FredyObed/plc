@@ -16,7 +16,7 @@
   }
 
   /* ============================================================ */
-  /* LOGO INSTITUCIONAL (esquina superior derecha)               */
+  /* LOGO INSTITUCIONAL                                            */
   /* ============================================================ */
   .logo-institucional {
     position: fixed;
@@ -31,7 +31,6 @@
     box-shadow:
       0 4px 12px rgba(0,0,0,0.5),
       0 0 0 2px rgba(79,195,247,0.3);
-    transition: transform 0.3s;
     pointer-events: none;
     user-select: none;
   }
@@ -42,13 +41,16 @@
     display: block;
   }
 
+  /* ============================================================ */
+  /* NAVEGACIÓN                                                    */
+  /* ============================================================ */
   nav {
     display: flex;
     gap: 5px;
     margin-bottom: 15px;
     background: linear-gradient(180deg, #2c3e50, #1a252f);
     padding: 6px;
-    padding-right: 110px; /* espacio para el logo */
+    padding-right: 110px;
     border-radius: 8px;
     border: 1px solid #34495e;
     box-shadow: 0 4px 10px rgba(0,0,0,0.5);
@@ -61,7 +63,7 @@
     border: 1px solid #4a5c70;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: bold;
     letter-spacing: 1px;
     transition: all 0.2s;
@@ -78,26 +80,111 @@
   .pantalla.activa { display: block; animation: fadeIn 0.3s; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-  .card {
-    background: linear-gradient(180deg, #141c24, #0f161d);
-    border-radius: 8px;
-    padding: 18px;
-    margin-bottom: 15px;
-    border: 1px solid #22303c;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.03);
+  /* ============================================================ */
+  /* PANTALLA 1: PORTADA                                           */
+  /* ============================================================ */
+  .portada {
+    min-height: calc(100vh - 120px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(ellipse at center, #1a2630 0%, #0a0e12 70%);
+    border-radius: 12px;
+    border: 2px solid #22303c;
+    padding: 40px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
   }
-  .card h2 {
-    font-size: 13px;
-    margin-bottom: 15px;
-    color: #4fc3f7;
-    border-bottom: 1px solid #22303c;
-    padding-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: 600;
+  .portada::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(79,195,247,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,195,247,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+  .portada-logo {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: #fff;
+    padding: 10px;
+    box-shadow:
+      0 0 40px rgba(79,195,247,0.3),
+      0 0 80px rgba(79,195,247,0.15);
+    margin-bottom: 30px;
+    animation: flotar 3s ease-in-out infinite;
+    position: relative;
+    z-index: 2;
+  }
+  .portada-logo img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  @keyframes flotar {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
   }
 
-  /* ===== BOTONERA ===== */
+  .portada h1 {
+    font-size: 32px;
+    color: #4fc3f7;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    text-shadow: 0 0 20px rgba(79,195,247,0.5);
+    position: relative;
+    z-index: 2;
+    font-weight: 600;
+  }
+  .portada h2 {
+    font-size: 16px;
+    color: #90a4ae;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 2;
+    font-weight: 400;
+  }
+  .portada-linea {
+    width: 200px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #4fc3f7, transparent);
+    margin: 20px 0;
+    position: relative;
+    z-index: 2;
+  }
+  .portada-info {
+    color: #78909c;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+    margin-top: 10px;
+  }
+  .portada-version {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: #546e7a;
+    letter-spacing: 2px;
+    font-family: 'Consolas', monospace;
+    z-index: 2;
+  }
+
+  /* ============================================================ */
+  /* BOTONERA INDUSTRIAL                                          */
+  /* ============================================================ */
   .botonera {
     background: linear-gradient(180deg, #d8d8d0 0%, #b8b8b0 100%);
     border-radius: 10px;
@@ -269,60 +356,133 @@
     min-width: 80px;
   }
 
-  /* ===== PILOTOS ===== */
-  .pilotos {
+  /* ============================================================ */
+  /* BALIZAS (torre de señalización)                              */
+  /* ============================================================ */
+  .balizas-panel {
     display: flex;
-    gap: 14px;
+    gap: 20px;
     justify-content: center;
-    flex-wrap: wrap;
-    padding: 10px;
-    background: radial-gradient(ellipse at center, #2a2a2a, #0f0f0f);
-    border-radius: 8px;
-    border: 3px solid #555;
-    box-shadow: inset 0 3px 8px rgba(0,0,0,0.8);
+    align-items: flex-end;
+    padding: 25px;
+    background: radial-gradient(ellipse at center, #1a1a1a, #050505);
+    border-radius: 10px;
+    border: 2px solid #333;
+    box-shadow: inset 0 3px 10px rgba(0,0,0,0.9);
+    margin-top: 12px;
   }
-  .piloto {
+  .baliza {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
   }
-  .piloto-led {
-    width: 34px;
-    height: 34px;
+  .baliza-cuerpo {
+    position: relative;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background: #1a1a1a;
-    border: 3px solid #444;
+    border: 4px solid #222;
     box-shadow:
-      inset 0 3px 6px rgba(0,0,0,0.8),
-      inset 0 -2px 4px rgba(255,255,255,0.05);
-    position: relative;
-    transition: all 0.2s;
+      inset 0 4px 8px rgba(0,0,0,0.9),
+      inset 0 -3px 6px rgba(255,255,255,0.05),
+      0 4px 8px rgba(0,0,0,0.6);
+    transition: all 0.3s;
   }
-  .piloto-led::before {
+  .baliza-cuerpo::before {
     content: '';
     position: absolute;
-    top: 4px; left: 50%;
+    top: 6px; left: 50%;
     transform: translateX(-50%);
-    width: 40%; height: 25%;
+    width: 45%; height: 22%;
     border-radius: 50%;
-    background: radial-gradient(ellipse, rgba(255,255,255,0.25), transparent);
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.15), transparent 70%);
+    pointer-events: none;
   }
-  .piloto-led.rojo.on  { background: radial-gradient(circle at 50% 30%, #ff9999, #f44336 60%, #b71c1c); box-shadow: 0 0 20px #f44336, inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(255,255,255,0.3); }
-  .piloto-led.verde.on { background: radial-gradient(circle at 50% 30%, #a5ffa5, #4caf50 60%, #1b5e20); box-shadow: 0 0 20px #4caf50, inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(255,255,255,0.3); }
-  .piloto-led.ambar.on { background: radial-gradient(circle at 50% 30%, #ffe0a5, #ff9800 60%, #e65100); box-shadow: 0 0 20px #ff9800, inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(255,255,255,0.3); }
-  .piloto-led.azul.on  { background: radial-gradient(circle at 50% 30%, #a5d8ff, #2196f3 60%, #0d47a1); box-shadow: 0 0 20px #2196f3, inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(255,255,255,0.3); }
-  .piloto-label {
-    font-size: 9px;
+
+  /* Verde - Aluminio */
+  .baliza-cuerpo.verde.on {
+    background: radial-gradient(circle at 50% 30%, #b5ffb5, #4caf50 55%, #1b5e20);
+    box-shadow:
+      0 0 30px #4caf50,
+      0 0 60px rgba(76,175,80,0.5),
+      inset 0 4px 8px rgba(0,0,0,0.4),
+      inset 0 -3px 6px rgba(255,255,255,0.3);
+    border-color: #66bb6a;
+  }
+  /* Azul - Cobre */
+  .baliza-cuerpo.azul.on {
+    background: radial-gradient(circle at 50% 30%, #b5dcff, #2196f3 55%, #0d47a1);
+    box-shadow:
+      0 0 30px #2196f3,
+      0 0 60px rgba(33,150,243,0.5),
+      inset 0 4px 8px rgba(0,0,0,0.4),
+      inset 0 -3px 6px rgba(255,255,255,0.3);
+    border-color: #42a5f5;
+  }
+  /* Rojo - Bronce */
+  .baliza-cuerpo.rojo.on {
+    background: radial-gradient(circle at 50% 30%, #ffb5b5, #f44336 55%, #b71c1c);
+    box-shadow:
+      0 0 30px #f44336,
+      0 0 60px rgba(244,67,54,0.5),
+      inset 0 4px 8px rgba(0,0,0,0.4),
+      inset 0 -3px 6px rgba(255,255,255,0.3);
+    border-color: #ef5350;
+  }
+  /* Amarillo - Griper (intermitente) */
+  .baliza-cuerpo.amarillo.on {
+    background: radial-gradient(circle at 50% 30%, #fff5b5, #ffc107 55%, #ff6f00);
+    box-shadow:
+      0 0 30px #ffc107,
+      0 0 60px rgba(255,193,7,0.6),
+      inset 0 4px 8px rgba(0,0,0,0.4),
+      inset 0 -3px 6px rgba(255,255,255,0.3);
+    border-color: #ffca28;
+    animation: baliza-parpadeo 0.6s ease-in-out infinite alternate;
+  }
+  @keyframes baliza-parpadeo {
+    from { opacity: 1; }
+    to   { opacity: 0.35; }
+  }
+
+  .baliza-label {
+    font-size: 10px;
     font-weight: bold;
-    color: #f0f0e8;
+    color: #ccc;
     letter-spacing: 1px;
     text-transform: uppercase;
     text-shadow: 0 1px 2px #000;
     text-align: center;
+    padding: 3px 8px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 3px;
+    min-width: 70px;
   }
 
-  /* ===== MAQUETA ===== */
+  /* ============================================================ */
+  /* MAQUETA                                                       */
+  /* ============================================================ */
+  .card {
+    background: linear-gradient(180deg, #141c24, #0f161d);
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 15px;
+    border: 1px solid #22303c;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.03);
+  }
+  .card h2 {
+    font-size: 13px;
+    margin-bottom: 15px;
+    color: #4fc3f7;
+    border-bottom: 1px solid #22303c;
+    padding-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+  }
   .maqueta {
     position: relative;
     background: radial-gradient(ellipse at top, #1a2630 0%, #0a0e12 100%);
@@ -590,6 +750,9 @@
     to   { box-shadow: 0 0 30px rgba(244,67,54,0.9); }
   }
 
+  /* ============================================================ */
+  /* REGISTROS                                                     */
+  /* ============================================================ */
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   th, td { padding: 10px; text-align: left; border-bottom: 1px solid #1e2a35; }
   th {
@@ -629,44 +792,82 @@
     margin-top: 5px;
   }
 
+  .badge-total {
+    display: inline-block;
+    background: #0078d4;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-left: 10px;
+  }
+
+  /* ============================================================ */
+  /* RESPONSIVE                                                    */
+  /* ============================================================ */
   @media (max-width: 700px) {
-    .logo-institucional {
-      width: 60px;
-      height: 60px;
-      top: 8px;
-      right: 8px;
-    }
-    nav {
-      padding-right: 80px;
-    }
+    .logo-institucional { width: 60px; height: 60px; top: 8px; right: 8px; }
+    nav { padding-right: 80px; }
+    nav button { font-size: 10px; padding: 10px 4px; letter-spacing: 0; }
+    .portada h1 { font-size: 22px; letter-spacing: 2px; }
+    .portada h2 { font-size: 12px; }
+    .portada-logo { width: 140px; height: 140px; }
     .maqueta-svg { height: 420px; }
     .resumen-grid { grid-template-columns: 1fr; }
     .btn-base { width: 66px; height: 66px; }
     .btn-cuerpo { width: 52px; height: 52px; font-size: 8px; }
     .btn-cuerpo.hongo { width: 58px; height: 58px; }
+    .baliza-cuerpo { width: 48px; height: 48px; }
+    .balizas-panel { gap: 10px; padding: 15px; }
   }
 </style>
 </head>
 <body>
 
 <!-- ============================================================ -->
-<!-- LOGO INSTITUCIONAL (esquina superior derecha, fijo)          -->
+<!-- LOGO INSTITUCIONAL FIJO                                       -->
 <!-- ============================================================ -->
 <div class="logo-institucional">
   <img src="logo.png" alt="Instituto Tecnológico de Puebla">
 </div>
 
+<!-- ============================================================ -->
+<!-- NAVEGACIÓN 4 PANTALLAS                                        -->
+<!-- ============================================================ -->
 <nav>
-  <button class="activo" onclick="cambiarPantalla(1, this)">⚙ CONTROL</button>
-  <button onclick="cambiarPantalla(2, this)">📊 PROCESO</button>
-  <button onclick="cambiarPantalla(3, this)">📋 REGISTROS</button>
+  <button class="activo" onclick="cambiarPantalla(1, this)">🏠 PORTADA</button>
+  <button onclick="cambiarPantalla(2, this)">⚙ CONTROL PLC1</button>
+  <button onclick="cambiarPantalla(3, this)">📊 MONITOREO</button>
+  <button onclick="cambiarPantalla(4, this)">📋 REGISTROS</button>
 </nav>
 
-<!-- PANTALLA 1: BOTONERA INDUSTRIAL -->
+<!-- ============================================================ -->
+<!-- PANTALLA 1: PORTADA                                           -->
+<!-- ============================================================ -->
 <section id="pantalla1" class="pantalla activa">
-  <div class="botonera">
-    <div class="placa-titulo">PLC · CLASIFICADOR DE MATERIALES</div>
+  <div class="portada">
+    <div class="portada-logo">
+      <img src="logo.png" alt="ITP">
+    </div>
+    <h1>Clasificador de Materiales</h1>
+    <div class="portada-linea"></div>
+    <h2>Sistema de Control y Monitoreo PLC</h2>
+    <div class="portada-info">Instituto Tecnológico de Puebla</div>
+    <div class="portada-info" style="margin-top: 6px;">Ingeniería Mecatrónica</div>
+    <div class="portada-version">HMI v2.0 · PLC1 + PLC2</div>
+  </div>
+</section>
 
+<!-- ============================================================ -->
+<!-- PANTALLA 2: CONTROL PLC1                                      -->
+<!-- ============================================================ -->
+<section id="pantalla2" class="pantalla">
+  <div class="botonera">
+    <div class="placa-titulo">PLC1 · CONTROL PRINCIPAL</div>
+
+    <!-- MANDO PRINCIPAL -->
     <div class="seccion-botonera">
       <div class="seccion-titulo">Mando Principal</div>
       <div class="fila-botones" style="grid-template-columns: repeat(2, 1fr); max-width: 400px; margin: 0 auto;">
@@ -685,6 +886,7 @@
       </div>
     </div>
 
+    <!-- RESETS -->
     <div class="seccion-botonera">
       <div class="seccion-titulo">Resets de Contenedor</div>
       <div class="fila-botones">
@@ -703,6 +905,7 @@
       </div>
     </div>
 
+    <!-- SELECTOR DE MATERIAL -->
     <div class="seccion-botonera">
       <div class="seccion-titulo">Selector de Material</div>
       <div class="fila-botones">
@@ -721,25 +924,27 @@
       </div>
     </div>
 
+    <!-- ESTADO DE SELECCIÓN -->
     <div class="seccion-botonera">
-      <div class="seccion-titulo">Pilotos Indicadores</div>
-      <div class="pilotos">
-        <div class="piloto"><div class="piloto-led verde" id="piloArranque"></div><div class="piloto-label">Marcha</div></div>
-        <div class="piloto"><div class="piloto-led rojo"  id="piloParo"></div>    <div class="piloto-label">Paro</div></div>
-        <div class="piloto"><div class="piloto-led azul"  id="piloBanda"></div>   <div class="piloto-label">Banda</div></div>
-        <div class="piloto"><div class="piloto-led ambar" id="piloGriper"></div>  <div class="piloto-label">Griper</div></div>
-        <div class="piloto"><div class="piloto-led rojo"  id="piloAlarma"></div>  <div class="piloto-label">Alarma</div></div>
+      <div class="seccion-titulo">Estado del Sistema</div>
+      <div class="estado-panel" style="margin-top: 0;">
+        <div class="estado-item"><span><span class="led" id="ledArranque"></span>Arranque</span><span id="valArranque">OFF</span></div>
+        <div class="estado-item"><span><span class="led ambar" id="ledGriper"></span>Griper</span><span id="valGriper">OFF</span></div>
+        <div class="estado-item"><span>Material</span><span id="valSeleccion">NINGUNO</span></div>
+        <div class="estado-item"><span>Estado ciclo</span><span id="valEstado">IDLE</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PANTALLA 2: MAQUETA -->
-<section id="pantalla2" class="pantalla">
+<!-- ============================================================ -->
+<!-- PANTALLA 3: MONITOREO DEL PROCESO (PLC2)                     -->
+<!-- ============================================================ -->
+<section id="pantalla3" class="pantalla">
   <div id="avisoLleno" class="aviso-lleno">⚠ CONTENEDOR LLENO</div>
 
   <div class="card">
-    <h2>Maqueta del Proceso</h2>
+    <h2>PLC2 · Monitoreo del Proceso</h2>
     <div class="maqueta">
       <div class="maqueta-svg" id="maqueta">
         <svg class="svg-fondo" viewBox="0 0 800 500" preserveAspectRatio="none">
@@ -799,26 +1004,51 @@
       </div>
     </div>
 
+    <!-- ===== BALIZAS ===== -->
+    <div class="balizas-panel">
+      <div class="baliza">
+        <div class="baliza-cuerpo verde" id="balAluminio"></div>
+        <div class="baliza-label">Aluminio</div>
+      </div>
+      <div class="baliza">
+        <div class="baliza-cuerpo azul" id="balCobre"></div>
+        <div class="baliza-label">Cobre</div>
+      </div>
+      <div class="baliza">
+        <div class="baliza-cuerpo rojo" id="balBronce"></div>
+        <div class="baliza-label">Bronce</div>
+      </div>
+      <div class="baliza">
+        <div class="baliza-cuerpo amarillo" id="balGriper"></div>
+        <div class="baliza-label">Griper</div>
+      </div>
+    </div>
+
     <div class="estado-panel">
-      <div class="estado-item"><span><span class="led" id="ledArranque"></span>Arranque</span><span id="valArranque">OFF</span></div>
       <div class="estado-item"><span><span class="led" id="ledBanda"></span>Banda</span><span id="valBanda">DETENIDA</span></div>
-      <div class="estado-item"><span><span class="led ambar" id="ledGriper"></span>Griper</span><span id="valGriper">OFF</span></div>
-      <div class="estado-item"><span>Material</span><span id="valSeleccion">-</span></div>
-      <div class="estado-item"><span>Estado ciclo</span><span id="valEstado">IDLE</span></div>
+      <div class="estado-item"><span>Material</span><span id="valSeleccion2">NINGUNO</span></div>
+      <div class="estado-item"><span>Producidos</span><span id="valProducidos">0</span></div>
+      <div class="estado-item"><span>Estado ciclo</span><span id="valEstado2">IDLE</span></div>
     </div>
   </div>
 </section>
 
-<!-- PANTALLA 3: REGISTROS -->
-<section id="pantalla3" class="pantalla">
+<!-- ============================================================ -->
+<!-- PANTALLA 4: REGISTROS (independientes del Reset)              -->
+<!-- ============================================================ -->
+<section id="pantalla4" class="pantalla">
   <div class="card">
-    <h2>Resumen de Producción</h2>
+    <h2>Resumen de Producción Total <span class="badge-total" id="badgeTotal">0 PIEZAS</span></h2>
     <div class="resumen-grid">
       <div class="resumen-card"><div class="num" id="regAluminio">0</div><div class="lbl">Aluminio</div></div>
       <div class="resumen-card"><div class="num" id="regCobre">0</div><div class="lbl">Cobre</div></div>
       <div class="resumen-card"><div class="num" id="regBronce">0</div><div class="lbl">Bronce</div></div>
     </div>
+    <p style="margin-top: 15px; font-size: 11px; color: #78909c; text-align: center; letter-spacing: 1px;">
+      ℹ Los registros son acumulativos y NO se reinician con los Resets
+    </p>
   </div>
+
   <div class="card">
     <h2>Histórico de Eventos</h2>
     <table>
@@ -855,10 +1085,20 @@ const DESTINOS = {
 };
 const HOME = { x: 70, y: 50 };
 
+/* =========================================================
+   ESTADO GLOBAL
+   ========================================================= */
 const estado = {
   Arranque: 0, Paro: 0,
   BandaActiva: 0, GriperActivo: 0, Seleccion: 0,
   ContadorAluminio: 0, ContadorCobre: 0, ContadorBronce: 0
+};
+
+/* REGISTROS TOTALES (NO se resetean con Reset) */
+const registros = {
+  Aluminio: 0,
+  Cobre: 0,
+  Bronce: 0
 };
 
 const NOMBRES = { 1: 'Aluminio', 2: 'Cobre', 3: 'Bronce' };
@@ -884,6 +1124,9 @@ function limpiarTimeouts() {
   timeoutsActivos = [];
 }
 
+/* =========================================================
+   NAVEGACIÓN
+   ========================================================= */
 function cambiarPantalla(num, btn) {
   document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('activo'));
@@ -891,6 +1134,9 @@ function cambiarPantalla(num, btn) {
   btn.classList.add('activo');
 }
 
+/* =========================================================
+   UTILIDADES SVG
+   ========================================================= */
 function moverGriperA(xSvg, ySvg) {
   const maqueta = document.getElementById('maqueta');
   const griper = document.getElementById('griperUnico');
@@ -912,25 +1158,30 @@ function posicionarIndicadorHome() {
 }
 
 function actualizarEstadoCiclo() {
-  const el = document.getElementById('valEstado');
-  if (el) el.textContent = estadoCiclo;
+  const el1 = document.getElementById('valEstado');
+  const el2 = document.getElementById('valEstado2');
+  if (el1) el1.textContent = estadoCiclo;
+  if (el2) el2.textContent = estadoCiclo;
 }
 
+/* =========================================================
+   COMANDOS
+   ========================================================= */
 function enviarComando(nombre, valor) {
   console.log("→", `${BASE_URL}?${nombre}=${valor}`);
 
   if (nombre === 'Arranque') {
     if (cicloEnCurso) return;
-    if (estado.Seleccion === 0) { mostrarAviso("Seleccione un material antes de arrancar."); return; }
-    if (contadorDe(estado.Seleccion) >= MAX_POR_CAJA) {
-      mostrarAviso(`Contenedor de ${NOMBRES[estado.Seleccion]} lleno. Resetee o cambie de material.`);
-      return;
-    }
+    /* ⭐ CAMBIO: ya NO se requiere seleccionar material antes de arrancar */
     estado.Arranque = 1;
     estado.Paro = 0;
     estado.BandaActiva = 1;
     actualizarVisual();
-    lanzarCiclo(estado.Seleccion);
+
+    /* Solo lanzar ciclo si hay material seleccionado y no está lleno */
+    if (estado.Seleccion > 0 && contadorDe(estado.Seleccion) < MAX_POR_CAJA) {
+      lanzarCiclo(estado.Seleccion);
+    }
   }
 
   if (nombre === 'Paro') {
@@ -960,15 +1211,19 @@ function resetContador(num) {
   document.getElementById(key).textContent = '0';
   const contMap = { 1: 'contAluminio', 2: 'contCobre', 3: 'contBronce' };
   document.getElementById(contMap[num]).innerHTML = '';
-  document.getElementById('reg' + NOMBRES[num]).textContent = '0';
   document.getElementById('caja' + NOMBRES[num]).classList.remove('llena');
   verificarAviso();
-  if (!cicloEnCurso && estado.Arranque && estado.Seleccion === num) lanzarCiclo(num);
+  /* ⭐ Los REGISTROS TOTALES no se tocan aquí */
+
+  if (!cicloEnCurso && estado.Arranque && estado.Seleccion === num) {
+    lanzarCiclo(num);
+  }
 }
 
 function seleccionarMaterial(num) {
   estado.Seleccion = num;
   document.getElementById('valSeleccion').textContent = NOMBRES[num];
+  document.getElementById('valSeleccion2').textContent = NOMBRES[num];
   enviarComando('SeleccionMaterial', num);
 
   ['Aluminio', 'Cobre', 'Bronce'].forEach((n, i) => {
@@ -979,6 +1234,7 @@ function seleccionarMaterial(num) {
     }
   });
 
+  /* ⭐ Cambio: si ya está arrancado pero sin ciclo en curso, empezar a producir */
   if (estado.Arranque && !cicloEnCurso) {
     if (contadorDe(num) >= MAX_POR_CAJA) {
       mostrarAviso(`El contenedor de ${NOMBRES[num]} está lleno.`);
@@ -994,6 +1250,9 @@ function seleccionarMaterial(num) {
   }
 }
 
+/* =========================================================
+   CICLO
+   ========================================================= */
 function lanzarCiclo(num) {
   if (cicloEnCurso) return;
   if (!estado.Arranque) return;
@@ -1090,6 +1349,9 @@ function lanzarCiclo(num) {
   }, tTotalPieza);
 }
 
+/* =========================================================
+   ALMACENAR
+   ========================================================= */
 function almacenar(num) {
   const nombre = NOMBRES[num];
   const key = 'Contador' + nombre;
@@ -1105,8 +1367,12 @@ function almacenar(num) {
   void p.offsetWidth;
   p.classList.add('visible');
 
-  document.getElementById('reg' + nombre).textContent = estado[key];
-  registrarEvento(nombre, estado[key]);
+  /* ⭐ REGISTROS TOTALES: acumulan sin resetearse */
+  registros[nombre]++;
+  document.getElementById('reg' + nombre).textContent = registros[nombre];
+  actualizarBadgeTotal();
+
+  registrarEvento(nombre, registros[nombre]);
 
   if (estado[key] >= MAX_POR_CAJA) {
     document.getElementById('caja' + nombre).classList.add('llena');
@@ -1117,35 +1383,60 @@ function almacenar(num) {
   }
 }
 
-function actualizarVisual() {
-  document.getElementById('ledArranque').className = 'led' + (estado.Arranque ? ' on' : '');
-  document.getElementById('valArranque').textContent = estado.Arranque ? 'ON' : 'OFF';
-  document.getElementById('ledBanda').className = 'led' + (estado.BandaActiva ? ' on' : '');
-  document.getElementById('valBanda').textContent = estado.BandaActiva ? 'EN MARCHA' : 'DETENIDA';
-  document.getElementById('ledGriper').className = 'led ambar' + (estado.GriperActivo ? ' on' : '');
-  document.getElementById('valGriper').textContent = estado.GriperActivo ? 'ACTIVO' : 'OFF';
+function actualizarBadgeTotal() {
+  const total = registros.Aluminio + registros.Cobre + registros.Bronce;
+  const badge = document.getElementById('badgeTotal');
+  if (badge) badge.textContent = total + ' PIEZAS';
+  const prod = document.getElementById('valProducidos');
+  if (prod) prod.textContent = total;
+}
 
+/* =========================================================
+   VISUAL
+   ========================================================= */
+function actualizarVisual() {
+  // LEDs del panel de estado
+  const ledA = document.getElementById('ledArranque');
+  if (ledA) ledA.className = 'led' + (estado.Arranque ? ' on' : '');
+  const valA = document.getElementById('valArranque');
+  if (valA) valA.textContent = estado.Arranque ? 'ON' : 'OFF';
+
+  const ledB = document.getElementById('ledBanda');
+  if (ledB) ledB.className = 'led' + (estado.BandaActiva ? ' on' : '');
+  const valB = document.getElementById('valBanda');
+  if (valB) valB.textContent = estado.BandaActiva ? 'EN MARCHA' : 'DETENIDA';
+
+  const ledG = document.getElementById('ledGriper');
+  if (ledG) ledG.className = 'led ambar' + (estado.GriperActivo ? ' on' : '');
+  const valG = document.getElementById('valGriper');
+  if (valG) valG.textContent = estado.GriperActivo ? 'ACTIVO' : 'OFF';
+
+  // Marcas de banda
   const activa = estado.BandaActiva === 1;
   ['marcasEntrada', 'marcasIzq', 'marcasCen', 'marcasDer'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.toggle('activa', activa);
   });
 
-  const piloArranque = document.getElementById('piloArranque');
-  const piloParo     = document.getElementById('piloParo');
-  const piloBanda    = document.getElementById('piloBanda');
-  const piloGriper   = document.getElementById('piloGriper');
-  const piloAlarma   = document.getElementById('piloAlarma');
-  if (piloArranque) piloArranque.classList.toggle('on', estado.Arranque === 1);
-  if (piloParo)     piloParo.classList.toggle('on', estado.Paro === 1 && estado.Arranque === 0);
-  if (piloBanda)    piloBanda.classList.toggle('on', estado.BandaActiva === 1);
-  if (piloGriper)   piloGriper.classList.toggle('on', estado.GriperActivo === 1);
-  if (piloAlarma) {
-    const hayLleno = [1,2,3].some(n => contadorDe(n) >= MAX_POR_CAJA);
-    piloAlarma.classList.toggle('on', hayLleno);
-  }
+  // ===== BALIZAS =====
+  const balAl = document.getElementById('balAluminio');
+  const balCu = document.getElementById('balCobre');
+  const balBr = document.getElementById('balBronce');
+  const balGr = document.getElementById('balGriper');
+
+  // Baliza Verde: Aluminio (encendida cuando se está procesando aluminio)
+  if (balAl) balAl.classList.toggle('on', estado.Seleccion === 1 && estado.Arranque === 1);
+  // Baliza Azul: Cobre
+  if (balCu) balCu.classList.toggle('on', estado.Seleccion === 2 && estado.Arranque === 1);
+  // Baliza Roja: Bronce
+  if (balBr) balBr.classList.toggle('on', estado.Seleccion === 3 && estado.Arranque === 1);
+  // Baliza Amarilla: Griper (intermitente cuando está activo)
+  if (balGr) balGr.classList.toggle('on', estado.GriperActivo === 1);
 }
 
+/* =========================================================
+   AVISOS
+   ========================================================= */
 function mostrarAviso(texto) {
   const aviso = document.getElementById('avisoLleno');
   aviso.textContent = '⚠ ' + texto;
@@ -1156,31 +1447,41 @@ function verificarAviso() {
   if (!hayLleno) document.getElementById('avisoLleno').classList.remove('visible');
 }
 
-function registrarEvento(material, valor) {
+/* =========================================================
+   HISTORIAL
+   ========================================================= */
+function registrarEvento(material, total) {
   const tbody = document.getElementById('tablaHistorial');
   const vacio = tbody.querySelector('.vacio');
   if (vacio) vacio.parentElement.remove();
   const hora = new Date().toLocaleTimeString();
   const fila = document.createElement('tr');
-  fila.innerHTML = `<td>${tbody.rows.length + 1}</td><td>${hora}</td><td>${material} = ${valor}/${MAX_POR_CAJA}</td>`;
+  fila.innerHTML = `<td>${tbody.rows.length + 1}</td><td>${hora}</td><td>${material} clasificado · Total: ${total}</td>`;
   tbody.prepend(fila);
-  while (tbody.rows.length > 20) tbody.deleteRow(-1);
+  while (tbody.rows.length > 30) tbody.deleteRow(-1);
 }
 
+/* =========================================================
+   RESIZE
+   ========================================================= */
 window.addEventListener('resize', () => {
   posicionarIndicadorHome();
   if (estadoCiclo === CICLO.IDLE) griperAlHome();
   else if (estado.Seleccion > 0) griperAlCarril(estado.Seleccion);
 });
 
+/* =========================================================
+   INIT
+   ========================================================= */
 window.addEventListener('load', () => {
   posicionarIndicadorHome();
   griperAlHome();
   actualizarVisual();
   actualizarEstadoCiclo();
+  actualizarBadgeTotal();
 });
 
-console.log("HMI lista. Logo ITP integrado.");
+console.log("HMI v2.0 lista. 4 pantallas + balizas.");
 </script>
 
 </body>
