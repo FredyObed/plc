@@ -220,7 +220,8 @@
     width: 60px;
     height: 80px;
     z-index: 10;
-    transition: left 0.7s cubic-bezier(0.45, 0, 0.55, 1);
+    transition: left 0.7s cubic-bezier(0.45, 0, 0.55, 1),
+                top  0.7s cubic-bezier(0.45, 0, 0.55, 1);
     pointer-events: none;
   }
   .griper-unico .brazo {
@@ -345,6 +346,29 @@
   @keyframes caja-llena {
     from { box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 0 10px rgba(244,67,54,0.4); }
     to   { box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 0 20px rgba(244,67,54,0.8); }
+  }
+
+  /* ===== HOME DEL GRIPER (indicador en esquina) ===== */
+  .home-griper {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border: 2px dashed #4fc3f7;
+    border-radius: 8px;
+    z-index: 3;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  .home-griper::before {
+    content: 'HOME';
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    color: #4fc3f7;
+    letter-spacing: 1px;
+    font-weight: bold;
   }
 
   /* ===== PIEZA VIAJERA ===== */
@@ -554,6 +578,10 @@
           <circle cx="400" cy="150" r="8" fill="#7d5a00" opacity="0.6" />
         </svg>
 
+        <!-- Home del griper (indicador visual esquina superior izquierda) -->
+        <div class="home-griper" id="homeGriper" style="left: 40px; top: 20px;"></div>
+
+        <!-- Griper único -->
         <div class="griper-unico" id="griperUnico">
           <div class="brazo"></div>
           <div class="pinza"></div>
@@ -618,13 +646,13 @@ const SVG_W = 800;
 const SVG_H = 500;
 
 /* Tiempos (ms) */
-const T_ENTRADA        = 800;   // pieza baja por la banda de entrada
-const T_PAUSA_NODO     = 900;   // pieza espera en el nodo
-const T_RECORRIDO      = 1800;  // pieza recorre el desvío
-const T_GRIPER_VIAJE   = 700;   // griper centro → carril (transition CSS)
-const T_GRIPER_PINZA   = 500;   // pinza baja y sube
-const T_GRIPER_REGRESO = 700;   // griper carril → centro
-const T_ESPERA_EXTRA   = 200;   // margen de seguridad entre ciclos
+const T_ENTRADA        = 800;
+const T_PAUSA_NODO     = 900;
+const T_RECORRIDO      = 1800;
+const T_GRIPER_VIAJE   = 900;   // ajustado: recorrido más largo (desde esquina)
+const T_GRIPER_PINZA   = 500;
+const T_GRIPER_REGRESO = 900;   // mismo tiempo de vuelta a la esquina
+const T_ESPERA_EXTRA   = 200;
 
 /* Coordenadas (unidades SVG) */
 const NODO = { x: 400, y: 150 };
@@ -633,6 +661,8 @@ const DESTINOS = {
   2: { x: 400, y: 320 },
   3: { x: 670, y: 320 }
 };
+/* HOME del griper: esquina superior izquierda (coordenadas SVG) */
+const HOME = { x: 70, y: 50 };
 
 /* =========================================================
    NAVEGACIÓN
@@ -662,13 +692,6 @@ const CLASES  = { 1: 'aluminio', 2: 'cobre', 3: 'bronce' };
 
 /* =========================================================
    MÁQUINA DE ESTADOS DEL CICLO
-   =========================================================
-   Posibles valores:
-     IDLE              → sin proceso, esperando arranque
-     ESPERANDO_ARRIBO  → pieza esperando en el nodo
-     GRIper_VIAJANDO   → griper viajando al carril
-     GRIper_CLASIFICA  → pinza bajando/clasificando
-     GRIper_REGRESANDO → griper volviendo al centro
    ========================================================= */
 const CICLO = {
   IDLE:              'IDLE',
@@ -678,11 +701,8 @@ const CICLO = {
   GRIper_REGRESANDO: 'GRIPER_REGRESANDO'
 };
 let estadoCiclo = CICLO.IDLE;
-
-/* Bandera de seguridad: evita lanzar más de una pieza */
 let cicloEnCurso = false;
 
-/* Referencia a timeouts activos (para poder cancelarlos en Paro/Reset) */
 let timeoutsActivos = [];
 function programar(fn, ms) {
   const id = setTimeout(fn, ms);
@@ -697,14 +717,6 @@ function limpiarTimeouts() {
 /* =========================================================
    UTILIDADES SVG
    ========================================================= */
-function svgAPx(p) {
-  const r = document.getElementById('maqueta').getBoundingClientRect();
-  return {
-    x: p.x * (r.width / SVG_W),
-    y: p.y * (r.height / SVG_H)
-  };
-}
-
 function moverGriperA(xSvg, ySvg) {
   const maqueta = document.getElementById('maqueta');
   const griper = document.getElementById('griperUnico');
@@ -715,16 +727,24 @@ function moverGriperA(xSvg, ySvg) {
   griper.style.top  = py + 'px';
 }
 
-function griperAlCentro() { moverGriperA(NODO.x, NODO.y + 30); }
-function griperAlCarril(num) { moverGriperA(DESTINOS[num].x, DESTINOS[num].y); }
+function griperAlHome()       { moverGriperA(HOME.x, HOME.y + 30); }
+function griperAlCarril(num)  { moverGriperA(DESTINOS[num].x, DESTINOS[num].y); }
 
-/* =========================================================
-   ACTUALIZAR INDICADOR DE ESTADO DEL CICLO
-   ========================================================= */
+/* Home en pantalla: posicionar el indicador en la esquina */
+function posicionarIndicadorHome() {
+  const maqueta = document.getElementById('maqueta');
+  const home = document.getElementById('homeGriper');
+  if (!maqueta || !home) return;
+  const r = maqueta.getBoundingClientRect();
+  const px = HOME.x * (r.width / SVG_W) - 30;
+  const py = HOME.y * (r.height / SVG_H) - 10;
+  home.style.left = px + 'px';
+  home.style.top  = py + 'px';
+}
+
 function actualizarEstadoCiclo() {
   const el = document.getElementById('valEstado');
-  if (!el) return;
-  el.textContent = estadoCiclo;
+  if (el) el.textContent = estadoCiclo;
 }
 
 /* =========================================================
@@ -732,10 +752,8 @@ function actualizarEstadoCiclo() {
    ========================================================= */
 function enviarComando(nombre, valor) {
   console.log("→", `${BASE_URL}?${nombre}=${valor}`);
-  // fetch(`${BASE_URL}?${nombre}=${valor}`).catch(e => console.error(e));
 
   if (nombre === 'Arranque') {
-    // GUARDAS: no arrancar si ya hay ciclo en curso o si el material está lleno
     if (cicloEnCurso) return;
     if (estado.Seleccion === 0) { mostrarAviso("Seleccione un material antes de arrancar."); return; }
     if (contadorDe(estado.Seleccion) >= MAX_POR_CAJA) {
@@ -752,12 +770,10 @@ function enviarComando(nombre, valor) {
     estado.Arranque = 0;
     estado.BandaActiva = 0;
     estado.GriperActivo = 0;
-    // Cancelar ciclo en curso y devolver griper al centro
     limpiarTimeouts();
     cicloEnCurso = false;
     estadoCiclo = CICLO.IDLE;
-    griperAlCentro();
-    // Eliminar cualquier pieza viajera en el DOM
+    griperAlHome();
     document.querySelectorAll('.pieza-viajera').forEach(p => p.remove());
     actualizarEstadoCiclo();
     actualizarVisual();
@@ -780,7 +796,6 @@ function resetContador(num) {
   document.getElementById('caja' + NOMBRES[num]).classList.remove('llena');
   verificarAviso();
 
-  // Si el ciclo quedó trabado por este contenedor lleno, reanudar
   if (!cicloEnCurso && estado.Arranque && estado.Seleccion === num) {
     lanzarCiclo(num);
   }
@@ -809,18 +824,16 @@ function seleccionarMaterial(num) {
 }
 
 /* =========================================================
-   CICLO COMPLETO (MÁQUINA DE ESTADOS)
+   CICLO COMPLETO
    =========================================================
-   Un ciclo = una pieza clasificada.
-   Bloquea nuevos ciclos hasta que termine.
-   Cada fase espera a la anterior mediante callbacks.
+   El griper parte del HOME (esquina sup. izq), viaja al carril,
+   clasifica y regresa al HOME. Todo el ciclo se cierra cuando
+   el griper ya está de vuelta en su home.
    ========================================================= */
 function lanzarCiclo(num) {
-  // GUARDA DE SEGURIDAD: nunca lanzar dos ciclos a la vez
   if (cicloEnCurso) return;
   if (!estado.Arranque) return;
   if (contadorDe(num) >= MAX_POR_CAJA) {
-    // Caja llena → detener banda
     estado.BandaActiva = 0;
     estado.Arranque = 0;
     actualizarVisual();
@@ -833,7 +846,7 @@ function lanzarCiclo(num) {
   estadoCiclo = CICLO.IDLE;
   actualizarEstadoCiclo();
 
-  // --- FASE 1: crear la pieza y animarla por la banda de entrada ---
+  /* --- FASE 1: animar la pieza por la banda de entrada y desvío --- */
   const maqueta = document.getElementById('maqueta');
   const rutaEntrada = document.getElementById('rutaEntrada');
   const rutaDesvio  = document.getElementById({1:'rutaIzq',2:'rutaCen',3:'rutaDer'}[num]);
@@ -847,7 +860,6 @@ function lanzarCiclo(num) {
   const t0 = performance.now();
 
   function animar(now) {
-    // Guarda: si la pieza fue removida (Paro), salir
     if (!pieza.parentNode) return;
 
     const r = maqueta.getBoundingClientRect();
@@ -858,11 +870,9 @@ function lanzarCiclo(num) {
     let p;
 
     if (t < T_ENTRADA) {
-      // Fase 1a: bajar por la banda de entrada
       const prog = t / T_ENTRADA;
       p = rutaEntrada.getPointAtLength(prog * totalEntrada);
     } else if (t < T_ENTRADA + T_PAUSA_NODO) {
-      // Fase 1b: esperar en el nodo
       p = { x: NODO.x, y: NODO.y };
       pieza.classList.add('esperando');
       if (estadoCiclo !== CICLO.ESPERANDO_ARRIBO) {
@@ -870,12 +880,10 @@ function lanzarCiclo(num) {
         actualizarEstadoCiclo();
       }
     } else if (t < T_ENTRADA + T_PAUSA_NODO + T_RECORRIDO) {
-      // Fase 1c: recorrer el desvío
       pieza.classList.remove('esperando');
       const prog = (t - T_ENTRADA - T_PAUSA_NODO) / T_RECORRIDO;
       p = rutaDesvio.getPointAtLength(prog * totalDesvio);
     } else {
-      // Fin de la animación de la pieza
       pieza.remove();
       return;
     }
@@ -886,8 +894,8 @@ function lanzarCiclo(num) {
   }
   requestAnimationFrame(animar);
 
-  // --- FASE 2: mover el griper al carril (arranca ANTES de que la pieza deje el nodo) ---
-  // El griper tarda T_GRIPER_VIAJE; debe llegar justo cuando la pieza sale del nodo.
+  /* --- FASE 2: griper sale del HOME hacia el carril --- */
+  // Debe llegar justo cuando la pieza va a salir del nodo.
   const tSalidaGriper = T_ENTRADA + T_PAUSA_NODO - T_GRIPER_VIAJE;
   programar(() => {
     if (!cicloEnCurso) return;
@@ -896,7 +904,7 @@ function lanzarCiclo(num) {
     griperAlCarril(num);
   }, tSalidaGriper);
 
-  // --- FASE 3: al llegar la pieza a la caja, activar pinza ---
+  /* --- FASE 3: la pinza clasifica --- */
   const tPinza = T_ENTRADA + T_PAUSA_NODO + T_RECORRIDO;
   programar(() => {
     if (!cicloEnCurso) return;
@@ -911,22 +919,20 @@ function lanzarCiclo(num) {
       griper.classList.remove('activo');
       estado.GriperActivo = 0;
       actualizarVisual();
-      // Almacenar en la caja
       almacenar(num);
 
-      // --- FASE 4: regresar el griper al centro ---
+      /* --- FASE 4: griper regresa al HOME --- */
       estadoCiclo = CICLO.GRIper_REGRESANDO;
       actualizarEstadoCiclo();
       programar(() => {
-        griperAlCentro();
+        griperAlHome();
       }, 150);
 
-      // --- FASE 5: cerrar el ciclo cuando el griper ya volvió ---
+      /* --- FASE 5: cerrar ciclo cuando ya está en HOME --- */
       programar(() => {
         cicloEnCurso = false;
         estadoCiclo = CICLO.IDLE;
         actualizarEstadoCiclo();
-        // Solo lanzar el siguiente ciclo si sigue arrancado y con el mismo material
         if (estado.Arranque && estado.BandaActiva === 1 && estado.Seleccion === num) {
           if (contadorDe(num) < MAX_POR_CAJA) {
             programar(() => lanzarCiclo(num), T_ESPERA_EXTRA);
@@ -1049,8 +1055,9 @@ async function actualizarDatos() {
    RESIZE
    ========================================================= */
 window.addEventListener('resize', () => {
+  posicionarIndicadorHome();
   if (estadoCiclo === CICLO.IDLE) {
-    griperAlCentro();
+    griperAlHome();
   } else if (estado.Seleccion > 0) {
     griperAlCarril(estado.Seleccion);
   }
@@ -1060,12 +1067,13 @@ window.addEventListener('resize', () => {
    INICIALIZACIÓN
    ========================================================= */
 window.addEventListener('load', () => {
-  griperAlCentro();
+  posicionarIndicadorHome();
+  griperAlHome();
   actualizarVisual();
   actualizarEstadoCiclo();
 });
 
-console.log("HMI lista. Máquina de estados activa.");
+console.log("HMI lista. Home del griper en esquina superior izquierda.");
 </script>
 
 </body>
