@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HMI - Clasificador de Materiales</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #0a0e12;
+    color: #e0e0e0;
+    font-size: 14px;
+    padding: 10px;
+    min-height: 100vh;
+  }
+
+  nav {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 15px;
+    background: linear-gradient(180deg, #2c3e50, #1a252f);
+    padding: 6px;
+    border-radius: 8px;
+    border: 1px solid #34495e;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  }
+  nav button {
+    flex: 1;
+    padding: 14px;
+    background: linear-gradient(180deg, #3a4a5c, #2c3a4a);
+    color: #b0bec5;
+    border: 1px solid #4a5c70;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  nav button:hover { background: linear-gradient(180deg, #4a5c70, #3a4a5c); }
+  nav button.activo {
+    background: linear-gradient(180deg, #0078d4, #005a9e);
+    color: #fff;
+    border-color: #4fc3f7;
+    box-shadow: 0 0 15px rgba(79,195,247,0.4);
+  }
+
+  .pantalla { display: none; }
+  .pantalla.activa { display: block; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .card {
+    background: linear-gradient(180deg, #141c24, #0f161d);
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 15px;
+    border: 1px solid #22303c;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.03);
+  }
+  .card h2 {
+    font-size: 13px;
+    margin-bottom: 15px;
+    color: #4fc3f7;
+    border-bottom: 1px solid #22303c;
+    padding-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+  }
+
+  /* ===== TABLERO ===== */
+  .tablero {
+    background: linear-gradient(180deg, #2a3a4a, #1a2630);
+    border-radius: 12px;
+    padding: 25px;
+    border: 3px solid #34495e;
+    box-shadow: inset 0 0 40px rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.6);
+    position: relative;
+  }
+  .tablero::before {
+    content: '';
+    position: absolute;
+    top: 10px; left: 10px; right: 10px; bottom: 10px;
+    border: 1px dashed #3a4a5c;
+    border-radius: 8px;
+    pointer-events: none;
+  }
+  .tablero-header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #34495e;
+  }
+  .tablero-header h3 {
+    color: #4fc3f7;
+    font-size: 15px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .led-power {
+    display: inline-block;
+    width: 10px; height: 10px;
+    background: #4caf50;
+    border-radius: 50%;
+    margin-right: 8px;
+    box-shadow: 0 0 10px #4caf50;
+    animation: pulsar 2s infinite;
+  }
+  @keyframes pulsar { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  .tablero-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  .btn-industrial {
+    padding: 22px 10px;
+    border: none;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    transition: all 0.1s;
+    box-shadow: 0 6px 0 rgba(0,0,0,0.4), 0 8px 12px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.3);
+  }
+  .btn-industrial:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.4), 0 3px 6px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.2);
+  }
+  .btn-industrial::after {
+    content: '';
+    position: absolute;
+    top: 12px; left: 50%;
+    transform: translateX(-50%);
+    width: 40%; height: 4px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 2px;
+  }
+  .btn-arranque { background: radial-gradient(circle at 50% 30%, #4caf50, #1b5e20); border: 2px solid #66bb6a; }
+  .btn-paro     { background: radial-gradient(circle at 50% 30%, #ef5350, #b71c1c); border: 2px solid #ef9a9a; }
+  .btn-reset    { background: radial-gradient(circle at 50% 30%, #ffb74d, #e65100); border: 2px solid #ffcc80; }
+  .btn-selector { background: radial-gradient(circle at 50% 30%, #546e7a, #263238); border: 2px solid #78909c; }
+  .btn-selector.activo {
+    background: radial-gradient(circle at 50% 30%, #29b6f6, #01579b);
+    border-color: #4fc3f7;
+    box-shadow: 0 6px 0 rgba(0,0,0,0.4), 0 8px 20px rgba(41,182,246,0.6), inset 0 2px 4px rgba(255,255,255,0.4);
+  }
+
+  .selector-grupo {
+    display: flex;
+    gap: 8px;
+    background: #0f1a24;
+    padding: 10px;
+    border-radius: 40px;
+    border: 2px solid #2c3e50;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
+  }
+  .selector-grupo .btn-industrial { flex: 1; border-radius: 30px; }
+
+  /* ===== MAQUETA ===== */
+  .maqueta {
+    position: relative;
+    background: radial-gradient(ellipse at top, #1a2630 0%, #0a0e12 100%);
+    border-radius: 10px;
+    border: 2px solid #22303c;
+    padding: 10px;
+    overflow: hidden;
+  }
+  .maqueta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(79,195,247,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,195,247,0.04) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+  }
+
+  .maqueta-svg {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    z-index: 2;
+  }
+  .svg-fondo {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+  }
+
+  .banda-base  { fill: none; stroke: #34495e; stroke-width: 30; stroke-linecap: round; stroke-linejoin: round; }
+  .banda-inner { fill: none; stroke: #1a1a1a; stroke-width: 22; stroke-linecap: round; stroke-linejoin: round; }
+  .banda-marcas {
+    fill: none;
+    stroke: rgba(120,144,156,0.5);
+    stroke-width: 22;
+    stroke-linecap: butt;
+    stroke-dasharray: 10 15;
+    opacity: 0;
+  }
+  .banda-marcas.activa {
+    opacity: 1;
+    animation: banda-mover 0.9s linear infinite;
+  }
+  @keyframes banda-mover { to { stroke-dashoffset: -25; } }
+
+  .nodo-svg { fill: url(#gradNodo); stroke: #7d5a00; stroke-width: 3; }
+
+  /* ===== GRIPER ===== */
+  .griper-unico {
+    position: absolute;
+    width: 60px;
+    height: 80px;
+    z-index: 10;
+    transition: left 0.7s cubic-bezier(0.45, 0, 0.55, 1);
+    pointer-events: none;
+  }
+  .griper-unico .brazo {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 35px;
+    background: linear-gradient(90deg, #555, #aaa, #555);
+    border-radius: 3px;
+    transition: height 0.3s;
+  }
+  .griper-unico .pinza {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 44px;
+    height: 26px;
+    background: linear-gradient(180deg, #f39c12, #b9770e);
+    border: 2px solid #7d5a00;
+    border-radius: 6px 6px 12px 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+    transition: all 0.3s;
+  }
+  .griper-unico .pinza::before,
+  .griper-unico .pinza::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    width: 8px;
+    height: 14px;
+    background: #d68910;
+    border: 1px solid #7d5a00;
+    border-radius: 0 0 3px 3px;
+  }
+  .griper-unico .pinza::before { left: 6px; }
+  .griper-unico .pinza::after  { right: 6px; }
+
+  .griper-unico.activo .brazo { height: 55px; }
+  .griper-unico.activo .pinza {
+    bottom: -5px;
+    box-shadow: 0 0 25px #f39c12, 0 4px 10px rgba(0,0,0,0.6);
+  }
+
+  /* ===== CAJAS ===== */
+  .caja-maqueta {
+    position: absolute;
+    width: 90px;
+    height: 110px;
+    background: linear-gradient(180deg, #2a3a4a, #16202a);
+    border: 3px solid #4a5c70;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 6px 12px rgba(0,0,0,0.4);
+    z-index: 6;
+  }
+  .caja-maqueta::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: #4a5c70;
+    border-radius: 0 0 3px 3px;
+  }
+  .caja-maqueta .label {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    z-index: 3;
+    text-shadow: 0 1px 3px #000;
+  }
+  .caja-maqueta.aluminio .label { color: #cfd8dc; }
+  .caja-maqueta.cobre .label    { color: #ff8a65; }
+  .caja-maqueta.bronce .label   { color: #ffd54f; }
+
+  .caja-maqueta .contenido {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 2px;
+    padding: 4px;
+  }
+  .pieza {
+    height: 14px;
+    border-radius: 3px;
+    opacity: 0;
+    transform: translateY(20px) scale(0.5);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: inset 0 2px 4px rgba(255,255,255,0.3);
+  }
+  .pieza.visible { opacity: 1; transform: translateY(0) scale(1); }
+  .caja-maqueta.aluminio .pieza { background: linear-gradient(135deg, #cfd8dc, #78909c); }
+  .caja-maqueta.cobre .pieza    { background: linear-gradient(135deg, #ff8a65, #bf360c); }
+  .caja-maqueta.bronce .pieza   { background: linear-gradient(135deg, #ffd54f, #f57f17); }
+
+  .caja-maqueta .contador {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    background: rgba(0,0,0,0.8);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: bold;
+    z-index: 4;
+    border: 1px solid #4fc3f7;
+    color: #4fc3f7;
+    font-family: 'Consolas', monospace;
+  }
+  .caja-maqueta.llena {
+    animation: caja-llena 0.6s ease-in-out infinite alternate;
+    border-color: #f44336;
+  }
+  @keyframes caja-llena {
+    from { box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 0 10px rgba(244,67,54,0.4); }
+    to   { box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 0 20px rgba(244,67,54,0.8); }
+  }
+
+  /* ===== PIEZA VIAJERA ===== */
+  .pieza-viajera {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    z-index: 8;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.3);
+    pointer-events: none;
+    will-change: left, top;
+  }
+  .pieza-viajera.aluminio { background: linear-gradient(135deg, #cfd8dc, #78909c); }
+  .pieza-viajera.cobre    { background: linear-gradient(135deg, #ff8a65, #bf360c); }
+  .pieza-viajera.bronce   { background: linear-gradient(135deg, #ffd54f, #f57f17); }
+  .pieza-viajera.esperando {
+    animation: pieza-espera 0.4s ease-in-out infinite alternate;
+  }
+  @keyframes pieza-espera {
+    from { box-shadow: 0 2px 6px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.3), 0 0 0 rgba(79,195,247,0); }
+    to   { box-shadow: 0 2px 6px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.3), 0 0 15px rgba(79,195,247,0.9); }
+  }
+
+  /* ===== ESTADO ===== */
+  .estado-panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 8px;
+    background: #0f1a24;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #22303c;
+    margin-top: 12px;
+  }
+  .estado-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    padding: 6px 10px;
+    background: #141c24;
+    border-radius: 4px;
+    border: 1px solid #1e2a35;
+  }
+  .estado-item span:first-child { color: #90a4ae; }
+  .estado-item span:last-child {
+    font-weight: bold;
+    color: #4fc3f7;
+    font-family: 'Consolas', monospace;
+  }
+  .led {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #455a64;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 6px;
+    box-shadow: inset 0 0 3px rgba(0,0,0,0.8);
+  }
+  .led.on { background: #4caf50; box-shadow: 0 0 10px #4caf50; }
+  .led.on.rojo { background: #f44336; box-shadow: 0 0 10px #f44336; }
+  .led.on.ambar { background: #ff9800; box-shadow: 0 0 10px #ff9800; }
+
+  .aviso-lleno {
+    background: linear-gradient(90deg, #b71c1c, #7f0000);
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border: 2px solid #ef5350;
+    box-shadow: 0 0 20px rgba(244,67,54,0.5);
+    display: none;
+    animation: alerta 1s ease-in-out infinite alternate;
+  }
+  .aviso-lleno.visible { display: block; }
+  @keyframes alerta {
+    from { box-shadow: 0 0 10px rgba(244,67,54,0.4); }
+    to   { box-shadow: 0 0 30px rgba(244,67,54,0.9); }
+  }
+
+  /* ===== REGISTROS ===== */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { padding: 10px; text-align: left; border-bottom: 1px solid #1e2a35; }
+  th {
+    background: #141c24;
+    color: #4fc3f7;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  tr:hover { background: #141c24; }
+  .vacio { text-align: center; color: #546e7a; padding: 30px; font-style: italic; }
+
+  .resumen-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .resumen-card {
+    background: #141c24;
+    border-radius: 6px;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #1e2a35;
+    border-top: 3px solid #4fc3f7;
+  }
+  .resumen-card .num {
+    font-size: 32px;
+    font-weight: bold;
+    color: #4fc3f7;
+    font-family: 'Consolas', monospace;
+  }
+  .resumen-card .lbl {
+    font-size: 11px;
+    color: #90a4ae;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 5px;
+  }
+
+  @media (max-width: 700px) {
+    .maqueta-svg { height: 420px; }
+    .resumen-grid { grid-template-columns: 1fr; }
+    .tablero-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <button class="activo" onclick="cambiarPantalla(1, this)">⚙ CONTROL</button>
+  <button onclick="cambiarPantalla(2, this)">📊 PROCESO</button>
+  <button onclick="cambiarPantalla(3, this)">📋 REGISTROS</button>
+</nav>
+
+<!-- PANTALLA 1 -->
+<section id="pantalla1" class="pantalla activa">
+  <div class="tablero">
+    <div class="tablero-header">
+      <h3><span class="led-power"></span>SISTEMA DE CLASIFICACIÓN</h3>
+    </div>
+    <div class="tablero-grid">
+      <button class="btn-industrial btn-arranque" onclick="enviarComando('Arranque', 1)">▶ ARRANQUE</button>
+      <button class="btn-industrial btn-paro" onclick="enviarComando('Paro', 1)">■ PARO</button>
+    </div>
+    <div style="margin-bottom: 20px;">
+      <h2 style="font-size: 11px; color:#90a4ae; margin-bottom:10px; text-transform:uppercase; letter-spacing:2px;">RESETS DE CONTENEDOR</h2>
+      <div class="tablero-grid">
+        <button class="btn-industrial btn-reset" onclick="enviarComando('Reset1', 1)">RESET ALUMINIO</button>
+        <button class="btn-industrial btn-reset" onclick="enviarComando('Reset2', 1)">RESET COBRE</button>
+        <button class="btn-industrial btn-reset" onclick="enviarComando('Reset3', 1)">RESET BRONCE</button>
+      </div>
+    </div>
+    <div>
+      <h2 style="font-size: 11px; color:#90a4ae; margin-bottom:10px; text-transform:uppercase; letter-spacing:2px;">SELECTOR DE MATERIAL</h2>
+      <div class="selector-grupo">
+        <button class="btn-industrial btn-selector" id="selAluminio" onclick="seleccionarMaterial(1)">ALUMINIO</button>
+        <button class="btn-industrial btn-selector" id="selCobre"    onclick="seleccionarMaterial(2)">COBRE</button>
+        <button class="btn-industrial btn-selector" id="selBronce"   onclick="seleccionarMaterial(3)">BRONCE</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PANTALLA 2 -->
+<section id="pantalla2" class="pantalla">
+  <div id="avisoLleno" class="aviso-lleno">⚠ CONTENEDOR LLENO</div>
+
+  <div class="card">
+    <h2>Maqueta del Proceso</h2>
+    <div class="maqueta">
+      <div class="maqueta-svg" id="maqueta">
+        <svg class="svg-fondo" viewBox="0 0 800 500" preserveAspectRatio="none">
+          <defs>
+            <radialGradient id="gradNodo" cx="50%" cy="35%">
+              <stop offset="0%" stop-color="#ffcc80"/>
+              <stop offset="100%" stop-color="#b9770e"/>
+            </radialGradient>
+
+            <path id="rutaEntrada" d="M 400 30 L 400 150" />
+            <path id="rutaIzq" d="M 400 150 Q 400 200 250 220 Q 130 235 130 290 L 130 340" />
+            <path id="rutaCen" d="M 400 150 L 400 340" />
+            <path id="rutaDer" d="M 400 150 Q 400 200 550 220 Q 670 235 670 290 L 670 340" />
+          </defs>
+
+          <path class="banda-base"  d="M 400 30 L 400 150" />
+          <path class="banda-inner" d="M 400 30 L 400 150" />
+          <path class="banda-marcas" id="marcasEntrada" d="M 400 30 L 400 150" />
+
+          <path class="banda-base"  d="M 400 150 Q 400 200 250 220 Q 130 235 130 290 L 130 340" />
+          <path class="banda-inner" d="M 400 150 Q 400 200 250 220 Q 130 235 130 290 L 130 340" />
+          <path class="banda-marcas" id="marcasIzq" d="M 400 150 Q 400 200 250 220 Q 130 235 130 290 L 130 340" />
+
+          <path class="banda-base"  d="M 400 150 L 400 340" />
+          <path class="banda-inner" d="M 400 150 L 400 340" />
+          <path class="banda-marcas" id="marcasCen" d="M 400 150 L 400 340" />
+
+          <path class="banda-base"  d="M 400 150 Q 400 200 550 220 Q 670 235 670 290 L 670 340" />
+          <path class="banda-inner" d="M 400 150 Q 400 200 550 220 Q 670 235 670 290 L 670 340" />
+          <path class="banda-marcas" id="marcasDer" d="M 400 150 Q 400 200 550 220 Q 670 235 670 290 L 670 340" />
+
+          <circle class="nodo-svg" cx="400" cy="150" r="22" />
+          <circle cx="400" cy="150" r="8" fill="#7d5a00" opacity="0.6" />
+        </svg>
+
+        <div class="griper-unico" id="griperUnico">
+          <div class="brazo"></div>
+          <div class="pinza"></div>
+        </div>
+
+        <div class="caja-maqueta aluminio" id="cajaAluminio" style="left: 6%; top: 68%;">
+          <div class="label">ALUMINIO</div>
+          <div class="contenido" id="contAluminio"></div>
+          <div class="contador"><span id="ContadorAluminio">0</span>/5</div>
+        </div>
+        <div class="caja-maqueta cobre" id="cajaCobre" style="left: 50%; top: 68%; transform: translateX(-50%);">
+          <div class="label">COBRE</div>
+          <div class="contenido" id="contCobre"></div>
+          <div class="contador"><span id="ContadorCobre">0</span>/5</div>
+        </div>
+        <div class="caja-maqueta bronce" id="cajaBronce" style="right: 6%; top: 68%;">
+          <div class="label">BRONCE</div>
+          <div class="contenido" id="contBronce"></div>
+          <div class="contador"><span id="ContadorBronce">0</span>/5</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="estado-panel">
+      <div class="estado-item"><span><span class="led" id="ledArranque"></span>Arranque</span><span id="valArranque">OFF</span></div>
+      <div class="estado-item"><span><span class="led" id="ledBanda"></span>Banda</span><span id="valBanda">DETENIDA</span></div>
+      <div class="estado-item"><span><span class="led ambar" id="ledGriper"></span>Griper</span><span id="valGriper">OFF</span></div>
+      <div class="estado-item"><span>Material</span><span id="valSeleccion">-</span></div>
+      <div class="estado-item"><span>Estado ciclo</span><span id="valEstado">IDLE</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PANTALLA 3 -->
+<section id="pantalla3" class="pantalla">
+  <div class="card">
+    <h2>Resumen de Producción</h2>
+    <div class="resumen-grid">
+      <div class="resumen-card"><div class="num" id="regAluminio">0</div><div class="lbl">Aluminio</div></div>
+      <div class="resumen-card"><div class="num" id="regCobre">0</div><div class="lbl">Cobre</div></div>
+      <div class="resumen-card"><div class="num" id="regBronce">0</div><div class="lbl">Bronce</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Histórico de Eventos</h2>
+    <table>
+      <thead><tr><th>#</th><th>Hora</th><th>Evento</th></tr></thead>
+      <tbody id="tablaHistorial">
+        <tr><td colspan="3" class="vacio">Sin registros todavía</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<script>
+/* =========================================================
+   CONFIGURACIÓN
+   ========================================================= */
+const BASE_URL = "";
+const MAX_POR_CAJA = 5;
+const SVG_W = 800;
+const SVG_H = 500;
+
+/* Tiempos (ms) */
+const T_ENTRADA        = 800;   // pieza baja por la banda de entrada
+const T_PAUSA_NODO     = 900;   // pieza espera en el nodo
+const T_RECORRIDO      = 1800;  // pieza recorre el desvío
+const T_GRIPER_VIAJE   = 700;   // griper centro → carril (transition CSS)
+const T_GRIPER_PINZA   = 500;   // pinza baja y sube
+const T_GRIPER_REGRESO = 700;   // griper carril → centro
+const T_ESPERA_EXTRA   = 200;   // margen de seguridad entre ciclos
+
+/* Coordenadas (unidades SVG) */
+const NODO = { x: 400, y: 150 };
+const DESTINOS = {
+  1: { x: 130, y: 320 },
+  2: { x: 400, y: 320 },
+  3: { x: 670, y: 320 }
+};
+
+/* =========================================================
+   NAVEGACIÓN
+   ========================================================= */
+function cambiarPantalla(num, btn) {
+  document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('activo'));
+  document.getElementById('pantalla' + num).classList.add('activa');
+  btn.classList.add('activo');
+}
+
+/* =========================================================
+   ESTADO GLOBAL
+   ========================================================= */
+const estado = {
+  Arranque: 0,
+  BandaActiva: 0,
+  GriperActivo: 0,
+  Seleccion: 0,
+  ContadorAluminio: 0,
+  ContadorCobre: 0,
+  ContadorBronce: 0
+};
+
+const NOMBRES = { 1: 'Aluminio', 2: 'Cobre', 3: 'Bronce' };
+const CLASES  = { 1: 'aluminio', 2: 'cobre', 3: 'bronce' };
+
+/* =========================================================
+   MÁQUINA DE ESTADOS DEL CICLO
+   =========================================================
+   Posibles valores:
+     IDLE              → sin proceso, esperando arranque
+     ESPERANDO_ARRIBO  → pieza esperando en el nodo
+     GRIper_VIAJANDO   → griper viajando al carril
+     GRIper_CLASIFICA  → pinza bajando/clasificando
+     GRIper_REGRESANDO → griper volviendo al centro
+   ========================================================= */
+const CICLO = {
+  IDLE:              'IDLE',
+  ESPERANDO_ARRIBO:  'ESPERANDO_ARRIBO',
+  GRIper_VIAJANDO:   'GRIPER_VIAJANDO',
+  GRIper_CLASIFICA:  'GRIPER_CLASIFICA',
+  GRIper_REGRESANDO: 'GRIPER_REGRESANDO'
+};
+let estadoCiclo = CICLO.IDLE;
+
+/* Bandera de seguridad: evita lanzar más de una pieza */
+let cicloEnCurso = false;
+
+/* Referencia a timeouts activos (para poder cancelarlos en Paro/Reset) */
+let timeoutsActivos = [];
+function programar(fn, ms) {
+  const id = setTimeout(fn, ms);
+  timeoutsActivos.push(id);
+  return id;
+}
+function limpiarTimeouts() {
+  timeoutsActivos.forEach(id => clearTimeout(id));
+  timeoutsActivos = [];
+}
+
+/* =========================================================
+   UTILIDADES SVG
+   ========================================================= */
+function svgAPx(p) {
+  const r = document.getElementById('maqueta').getBoundingClientRect();
+  return {
+    x: p.x * (r.width / SVG_W),
+    y: p.y * (r.height / SVG_H)
+  };
+}
+
+function moverGriperA(xSvg, ySvg) {
+  const maqueta = document.getElementById('maqueta');
+  const griper = document.getElementById('griperUnico');
+  const r = maqueta.getBoundingClientRect();
+  const px = xSvg * (r.width / SVG_W) - 30;
+  const py = ySvg * (r.height / SVG_H) - 40;
+  griper.style.left = px + 'px';
+  griper.style.top  = py + 'px';
+}
+
+function griperAlCentro() { moverGriperA(NODO.x, NODO.y + 30); }
+function griperAlCarril(num) { moverGriperA(DESTINOS[num].x, DESTINOS[num].y); }
+
+/* =========================================================
+   ACTUALIZAR INDICADOR DE ESTADO DEL CICLO
+   ========================================================= */
+function actualizarEstadoCiclo() {
+  const el = document.getElementById('valEstado');
+  if (!el) return;
+  el.textContent = estadoCiclo;
+}
+
+/* =========================================================
+   COMANDOS
+   ========================================================= */
+function enviarComando(nombre, valor) {
+  console.log("→", `${BASE_URL}?${nombre}=${valor}`);
+  // fetch(`${BASE_URL}?${nombre}=${valor}`).catch(e => console.error(e));
+
+  if (nombre === 'Arranque') {
+    // GUARDAS: no arrancar si ya hay ciclo en curso o si el material está lleno
+    if (cicloEnCurso) return;
+    if (estado.Seleccion === 0) { mostrarAviso("Seleccione un material antes de arrancar."); return; }
+    if (contadorDe(estado.Seleccion) >= MAX_POR_CAJA) {
+      mostrarAviso(`Contenedor de ${NOMBRES[estado.Seleccion]} lleno. Resetee o cambie de material.`);
+      return;
+    }
+    estado.Arranque = 1;
+    estado.BandaActiva = 1;
+    actualizarVisual();
+    lanzarCiclo(estado.Seleccion);
+  }
+
+  if (nombre === 'Paro') {
+    estado.Arranque = 0;
+    estado.BandaActiva = 0;
+    estado.GriperActivo = 0;
+    // Cancelar ciclo en curso y devolver griper al centro
+    limpiarTimeouts();
+    cicloEnCurso = false;
+    estadoCiclo = CICLO.IDLE;
+    griperAlCentro();
+    // Eliminar cualquier pieza viajera en el DOM
+    document.querySelectorAll('.pieza-viajera').forEach(p => p.remove());
+    actualizarEstadoCiclo();
+    actualizarVisual();
+  }
+
+  if (nombre === 'Reset1') resetContador(1);
+  if (nombre === 'Reset2') resetContador(2);
+  if (nombre === 'Reset3') resetContador(3);
+}
+
+function contadorDe(num) { return estado['Contador' + NOMBRES[num]]; }
+
+function resetContador(num) {
+  const key = 'Contador' + NOMBRES[num];
+  estado[key] = 0;
+  document.getElementById(key).textContent = '0';
+  const contMap = { 1: 'contAluminio', 2: 'contCobre', 3: 'contBronce' };
+  document.getElementById(contMap[num]).innerHTML = '';
+  document.getElementById('reg' + NOMBRES[num]).textContent = '0';
+  document.getElementById('caja' + NOMBRES[num]).classList.remove('llena');
+  verificarAviso();
+
+  // Si el ciclo quedó trabado por este contenedor lleno, reanudar
+  if (!cicloEnCurso && estado.Arranque && estado.Seleccion === num) {
+    lanzarCiclo(num);
+  }
+}
+
+function seleccionarMaterial(num) {
+  estado.Seleccion = num;
+  document.querySelectorAll('.btn-selector').forEach(b => b.classList.remove('activo'));
+  document.getElementById({1:'selAluminio',2:'selCobre',3:'selBronce'}[num]).classList.add('activo');
+  document.getElementById('valSeleccion').textContent = NOMBRES[num];
+  enviarComando('SeleccionMaterial', num);
+
+  if (estado.Arranque && !cicloEnCurso) {
+    if (contadorDe(num) >= MAX_POR_CAJA) {
+      mostrarAviso(`El contenedor de ${NOMBRES[num]} está lleno.`);
+      estado.BandaActiva = 0;
+      actualizarVisual();
+    } else {
+      estado.BandaActiva = 1;
+      actualizarVisual();
+      lanzarCiclo(num);
+    }
+  } else {
+    verificarAviso();
+  }
+}
+
+/* =========================================================
+   CICLO COMPLETO (MÁQUINA DE ESTADOS)
+   =========================================================
+   Un ciclo = una pieza clasificada.
+   Bloquea nuevos ciclos hasta que termine.
+   Cada fase espera a la anterior mediante callbacks.
+   ========================================================= */
+function lanzarCiclo(num) {
+  // GUARDA DE SEGURIDAD: nunca lanzar dos ciclos a la vez
+  if (cicloEnCurso) return;
+  if (!estado.Arranque) return;
+  if (contadorDe(num) >= MAX_POR_CAJA) {
+    // Caja llena → detener banda
+    estado.BandaActiva = 0;
+    estado.Arranque = 0;
+    actualizarVisual();
+    document.getElementById('caja' + NOMBRES[num]).classList.add('llena');
+    mostrarAviso(`Contenedor de ${NOMBRES[num]} lleno. Resetee o cambie de material.`);
+    return;
+  }
+
+  cicloEnCurso = true;
+  estadoCiclo = CICLO.IDLE;
+  actualizarEstadoCiclo();
+
+  // --- FASE 1: crear la pieza y animarla por la banda de entrada ---
+  const maqueta = document.getElementById('maqueta');
+  const rutaEntrada = document.getElementById('rutaEntrada');
+  const rutaDesvio  = document.getElementById({1:'rutaIzq',2:'rutaCen',3:'rutaDer'}[num]);
+  const totalEntrada = rutaEntrada.getTotalLength();
+  const totalDesvio  = rutaDesvio.getTotalLength();
+
+  const pieza = document.createElement('div');
+  pieza.className = `pieza-viajera ${CLASES[num]}`;
+  maqueta.appendChild(pieza);
+
+  const t0 = performance.now();
+
+  function animar(now) {
+    // Guarda: si la pieza fue removida (Paro), salir
+    if (!pieza.parentNode) return;
+
+    const r = maqueta.getBoundingClientRect();
+    const eX = r.width / SVG_W;
+    const eY = r.height / SVG_H;
+    const t = now - t0;
+
+    let p;
+
+    if (t < T_ENTRADA) {
+      // Fase 1a: bajar por la banda de entrada
+      const prog = t / T_ENTRADA;
+      p = rutaEntrada.getPointAtLength(prog * totalEntrada);
+    } else if (t < T_ENTRADA + T_PAUSA_NODO) {
+      // Fase 1b: esperar en el nodo
+      p = { x: NODO.x, y: NODO.y };
+      pieza.classList.add('esperando');
+      if (estadoCiclo !== CICLO.ESPERANDO_ARRIBO) {
+        estadoCiclo = CICLO.ESPERANDO_ARRIBO;
+        actualizarEstadoCiclo();
+      }
+    } else if (t < T_ENTRADA + T_PAUSA_NODO + T_RECORRIDO) {
+      // Fase 1c: recorrer el desvío
+      pieza.classList.remove('esperando');
+      const prog = (t - T_ENTRADA - T_PAUSA_NODO) / T_RECORRIDO;
+      p = rutaDesvio.getPointAtLength(prog * totalDesvio);
+    } else {
+      // Fin de la animación de la pieza
+      pieza.remove();
+      return;
+    }
+
+    pieza.style.left = (p.x * eX - 11) + 'px';
+    pieza.style.top  = (p.y * eY - 11) + 'px';
+    requestAnimationFrame(animar);
+  }
+  requestAnimationFrame(animar);
+
+  // --- FASE 2: mover el griper al carril (arranca ANTES de que la pieza deje el nodo) ---
+  // El griper tarda T_GRIPER_VIAJE; debe llegar justo cuando la pieza sale del nodo.
+  const tSalidaGriper = T_ENTRADA + T_PAUSA_NODO - T_GRIPER_VIAJE;
+  programar(() => {
+    if (!cicloEnCurso) return;
+    estadoCiclo = CICLO.GRIper_VIAJANDO;
+    actualizarEstadoCiclo();
+    griperAlCarril(num);
+  }, tSalidaGriper);
+
+  // --- FASE 3: al llegar la pieza a la caja, activar pinza ---
+  const tPinza = T_ENTRADA + T_PAUSA_NODO + T_RECORRIDO;
+  programar(() => {
+    if (!cicloEnCurso) return;
+    estadoCiclo = CICLO.GRIper_CLASIFICA;
+    actualizarEstadoCiclo();
+    estado.GriperActivo = 1;
+    actualizarVisual();
+    const griper = document.getElementById('griperUnico');
+    griper.classList.add('activo');
+
+    programar(() => {
+      griper.classList.remove('activo');
+      estado.GriperActivo = 0;
+      actualizarVisual();
+      // Almacenar en la caja
+      almacenar(num);
+
+      // --- FASE 4: regresar el griper al centro ---
+      estadoCiclo = CICLO.GRIper_REGRESANDO;
+      actualizarEstadoCiclo();
+      programar(() => {
+        griperAlCentro();
+      }, 150);
+
+      // --- FASE 5: cerrar el ciclo cuando el griper ya volvió ---
+      programar(() => {
+        cicloEnCurso = false;
+        estadoCiclo = CICLO.IDLE;
+        actualizarEstadoCiclo();
+        // Solo lanzar el siguiente ciclo si sigue arrancado y con el mismo material
+        if (estado.Arranque && estado.BandaActiva === 1 && estado.Seleccion === num) {
+          if (contadorDe(num) < MAX_POR_CAJA) {
+            programar(() => lanzarCiclo(num), T_ESPERA_EXTRA);
+          }
+        }
+      }, T_GRIPER_REGRESO + T_ESPERA_EXTRA);
+    }, T_GRIPER_PINZA);
+  }, tPinza);
+}
+
+/* =========================================================
+   ALMACENAR
+   ========================================================= */
+function almacenar(num) {
+  const nombre = NOMBRES[num];
+  const key = 'Contador' + nombre;
+  const contMap = { 1: 'contAluminio', 2: 'contCobre', 3: 'contBronce' };
+
+  if (estado[key] >= MAX_POR_CAJA) return;
+
+  estado[key]++;
+  document.getElementById(key).textContent = estado[key];
+
+  const cont = document.getElementById(contMap[num]);
+  const p = document.createElement('div');
+  p.className = 'pieza';
+  cont.appendChild(p);
+  void p.offsetWidth;
+  p.classList.add('visible');
+
+  document.getElementById('reg' + nombre).textContent = estado[key];
+  registrarEvento(nombre, estado[key]);
+
+  if (estado[key] >= MAX_POR_CAJA) {
+    document.getElementById('caja' + nombre).classList.add('llena');
+    estado.BandaActiva = 0;
+    estado.Arranque = 0;
+    actualizarVisual();
+    mostrarAviso(`Contenedor de ${nombre} LLENO (${MAX_POR_CAJA}/${MAX_POR_CAJA}). Resetee o cambie de material.`);
+  }
+}
+
+/* =========================================================
+   VISUAL
+   ========================================================= */
+function actualizarVisual() {
+  document.getElementById('ledArranque').className = 'led' + (estado.Arranque ? ' on' : '');
+  document.getElementById('valArranque').textContent = estado.Arranque ? 'ON' : 'OFF';
+
+  document.getElementById('ledBanda').className = 'led' + (estado.BandaActiva ? ' on' : '');
+  document.getElementById('valBanda').textContent = estado.BandaActiva ? 'EN MARCHA' : 'DETENIDA';
+
+  document.getElementById('ledGriper').className = 'led ambar' + (estado.GriperActivo ? ' on' : '');
+  document.getElementById('valGriper').textContent = estado.GriperActivo ? 'ACTIVO' : 'OFF';
+
+  const activa = estado.BandaActiva === 1;
+  ['marcasEntrada', 'marcasIzq', 'marcasCen', 'marcasDer'].forEach(id => {
+    document.getElementById(id).classList.toggle('activa', activa);
+  });
+}
+
+/* =========================================================
+   AVISOS
+   ========================================================= */
+function mostrarAviso(texto) {
+  const aviso = document.getElementById('avisoLleno');
+  aviso.textContent = '⚠ ' + texto;
+  aviso.classList.add('visible');
+}
+function verificarAviso() {
+  const hayLleno = [1,2,3].some(n => contadorDe(n) >= MAX_POR_CAJA);
+  if (!hayLleno) document.getElementById('avisoLleno').classList.remove('visible');
+}
+
+/* =========================================================
+   HISTORIAL
+   ========================================================= */
+function registrarEvento(material, valor) {
+  const tbody = document.getElementById('tablaHistorial');
+  const vacio = tbody.querySelector('.vacio');
+  if (vacio) vacio.parentElement.remove();
+  const hora = new Date().toLocaleTimeString();
+  const fila = document.createElement('tr');
+  fila.innerHTML = `<td>${tbody.rows.length + 1}</td><td>${hora}</td><td>${material} = ${valor}/${MAX_POR_CAJA}</td>`;
+  tbody.prepend(fila);
+  while (tbody.rows.length > 20) tbody.deleteRow(-1);
+}
+
+/* =========================================================
+   POLLING AL PLC
+   ========================================================= */
+async function leerVariable(nombre) {
+  try {
+    const r = await fetch(`${BASE_URL}?${nombre}`);
+    if (!r.ok) throw new Error();
+    return await r.text();
+  } catch (e) { return null; }
+}
+
+async function actualizarDatos() {
+  const vars = ['ContadorAluminio','ContadorCobre','ContadorBronce','BandaActiva','GriperActivo','Arranque'];
+  for (const v of vars) {
+    const val = await leerVariable(v);
+    if (val !== null) {
+      const n = parseInt(val);
+      if (!isNaN(n)) estado[v] = n;
+    }
+  }
+  ['Aluminio','Cobre','Bronce'].forEach(nombre => {
+    const k = 'Contador' + nombre;
+    document.getElementById(k).textContent = estado[k];
+    document.getElementById('reg' + nombre).textContent = estado[k];
+    if (estado[k] >= MAX_POR_CAJA) document.getElementById('caja' + nombre).classList.add('llena');
+  });
+  actualizarVisual();
+}
+// setInterval(actualizarDatos, 800);
+
+/* =========================================================
+   RESIZE
+   ========================================================= */
+window.addEventListener('resize', () => {
+  if (estadoCiclo === CICLO.IDLE) {
+    griperAlCentro();
+  } else if (estado.Seleccion > 0) {
+    griperAlCarril(estado.Seleccion);
+  }
+});
+
+/* =========================================================
+   INICIALIZACIÓN
+   ========================================================= */
+window.addEventListener('load', () => {
+  griperAlCentro();
+  actualizarVisual();
+  actualizarEstadoCiclo();
+});
+
+console.log("HMI lista. Máquina de estados activa.");
+</script>
+
+</body>
+</html>
