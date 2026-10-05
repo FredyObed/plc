@@ -69,101 +69,378 @@
     font-weight: 600;
   }
 
-  /* ===== TABLERO ===== */
-  .tablero {
-    background: linear-gradient(180deg, #2a3a4a, #1a2630);
-    border-radius: 12px;
-    padding: 25px;
-    border: 3px solid #34495e;
-    box-shadow: inset 0 0 40px rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.6);
+  /* ============================================================ */
+  /* BOTONERA INDUSTRIAL                                           */
+  /* ============================================================ */
+  .botonera {
+    background:
+      linear-gradient(180deg, #d8d8d0 0%, #b8b8b0 100%);
+    border-radius: 10px;
+    padding: 20px;
+    border: 3px solid #888;
+    box-shadow:
+      inset 0 2px 4px rgba(255,255,255,0.6),
+      inset 0 -4px 8px rgba(0,0,0,0.15),
+      0 8px 20px rgba(0,0,0,0.6);
     position: relative;
+    color: #222;
   }
-  .tablero::before {
+  /* Textura de placa metálica */
+  .botonera::before {
     content: '';
     position: absolute;
-    top: 10px; left: 10px; right: 10px; bottom: 10px;
-    border: 1px dashed #3a4a5c;
+    inset: 0;
     border-radius: 8px;
+    background-image:
+      repeating-linear-gradient(90deg,
+        rgba(255,255,255,0.02) 0 2px,
+        rgba(0,0,0,0.03) 2px 4px);
     pointer-events: none;
   }
-  .tablero-header {
-    text-align: center;
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid #34495e;
-  }
-  .tablero-header h3 {
-    color: #4fc3f7;
-    font-size: 15px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-  }
-  .led-power {
-    display: inline-block;
-    width: 10px; height: 10px;
-    background: #4caf50;
-    border-radius: 50%;
-    margin-right: 8px;
-    box-shadow: 0 0 10px #4caf50;
-    animation: pulsar 2s infinite;
-  }
-  @keyframes pulsar { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-  .tablero-grid {
+  /* Título de placa */
+  .placa-titulo {
+    text-align: center;
+    font-family: 'Consolas', monospace;
+    font-weight: bold;
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: #333;
+    padding: 6px 12px;
+    margin: -8px auto 18px;
+    background: linear-gradient(180deg, #e8e8e0, #c8c8c0);
+    border: 2px solid #999;
+    border-radius: 4px;
+    width: fit-content;
+    text-transform: uppercase;
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.8), 0 2px 4px rgba(0,0,0,0.2);
+  }
+
+  /* Secciones dentro de la botonera */
+  .seccion-botonera {
+    border-top: 2px solid #999;
+    border-bottom: 1px solid #e8e8e0;
+    padding: 15px 10px;
+    margin-bottom: 15px;
+  }
+  .seccion-botonera:last-child { margin-bottom: 0; }
+  .seccion-titulo {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: #444;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding: 3px 10px;
+    background: linear-gradient(180deg, #f0f0e8, #d0d0c8);
+    border-left: 4px solid #666;
+    display: inline-block;
+  }
+
+  /* Layout de la botonera */
+  .fila-botones {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 20px;
+    justify-items: center;
+    align-items: start;
   }
-  .btn-industrial {
-    padding: 22px 10px;
-    border: none;
-    border-radius: 50px;
-    font-size: 12px;
-    font-weight: bold;
+
+  /* ===== BOTÓN INDUSTRIAL (tipo hongo) ===== */
+  .btn-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
     cursor: pointer;
-    color: #fff;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    user-select: none;
+    transition: transform 0.1s;
+  }
+  .btn-panel:active { transform: scale(0.96); }
+
+  /* Base del pulsador (cuerpo metálico) */
+  .btn-base {
     position: relative;
-    transition: all 0.1s;
-    box-shadow: 0 6px 0 rgba(0,0,0,0.4), 0 8px 12px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.3);
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 30%,
+        #e8e8e0 0%,
+        #a8a8a0 45%,
+        #707070 100%);
+    box-shadow:
+      inset 0 3px 6px rgba(255,255,255,0.5),
+      inset 0 -4px 8px rgba(0,0,0,0.4),
+      0 4px 8px rgba(0,0,0,0.5),
+      0 0 0 3px #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .btn-industrial:active {
-    transform: translateY(4px);
-    box-shadow: 0 2px 0 rgba(0,0,0,0.4), 0 3px 6px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.2);
+
+  /* Cuerpo del botón (donde va el color) */
+  .btn-cuerpo {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.15s;
+    box-shadow:
+      inset 0 3px 6px rgba(255,255,255,0.4),
+      inset 0 -4px 8px rgba(0,0,0,0.5),
+      0 3px 6px rgba(0,0,0,0.6);
+    color: #fff;
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+    text-align: center;
+    padding: 4px;
+    line-height: 1.1;
   }
-  .btn-industrial::after {
+
+  /* Reflejo superior del botón */
+  .btn-cuerpo::before {
     content: '';
     position: absolute;
-    top: 12px; left: 50%;
+    top: 6px;
+    left: 50%;
     transform: translateX(-50%);
-    width: 40%; height: 4px;
-    background: rgba(255,255,255,0.25);
-    border-radius: 2px;
-  }
-  .btn-arranque { background: radial-gradient(circle at 50% 30%, #4caf50, #1b5e20); border: 2px solid #66bb6a; }
-  .btn-paro     { background: radial-gradient(circle at 50% 30%, #ef5350, #b71c1c); border: 2px solid #ef9a9a; }
-  .btn-reset    { background: radial-gradient(circle at 50% 30%, #ffb74d, #e65100); border: 2px solid #ffcc80; }
-  .btn-selector { background: radial-gradient(circle at 50% 30%, #546e7a, #263238); border: 2px solid #78909c; }
-  .btn-selector.activo {
-    background: radial-gradient(circle at 50% 30%, #29b6f6, #01579b);
-    border-color: #4fc3f7;
-    box-shadow: 0 6px 0 rgba(0,0,0,0.4), 0 8px 20px rgba(41,182,246,0.6), inset 0 2px 4px rgba(255,255,255,0.4);
+    width: 45%;
+    height: 22%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center,
+      rgba(255,255,255,0.6),
+      transparent 70%);
+    pointer-events: none;
   }
 
-  .selector-grupo {
+  /* Colores industriales */
+  .btn-cuerpo.verde {
+    background: radial-gradient(circle at 50% 30%, #7cff7c, #22a022 60%, #0a5a0a);
+  }
+  .btn-cuerpo.rojo {
+    background: radial-gradient(circle at 50% 30%, #ff7c7c, #d02020 60%, #7a0a0a);
+  }
+  .btn-cuerpo.ambar {
+    background: radial-gradient(circle at 50% 30%, #ffd47c, #e09000 60%, #8a4a00);
+  }
+  .btn-cuerpo.azul {
+    background: radial-gradient(circle at 50% 30%, #7cc4ff, #1565c0 60%, #0a3a6e);
+  }
+  .btn-cuerpo.negro {
+    background: radial-gradient(circle at 50% 30%, #666, #222 60%, #000);
+    color: #fff;
+  }
+  .btn-cuerpo.blanco {
+    background: radial-gradient(circle at 50% 30%, #ffffff, #d0d0c8 60%, #909090);
+    color: #222;
+    text-shadow: none;
+  }
+
+  /* Efecto al presionar (el botón se hunde) */
+  .btn-panel:active .btn-cuerpo {
+    box-shadow:
+      inset 0 3px 8px rgba(0,0,0,0.6),
+      inset 0 -2px 4px rgba(255,255,255,0.3),
+      0 1px 2px rgba(0,0,0,0.6);
+  }
+
+  /* Botón tipo hongo (más grande y salido) */
+  .btn-cuerpo.hongo {
+    width: 68px;
+    height: 68px;
+    box-shadow:
+      inset 0 4px 8px rgba(255,255,255,0.5),
+      inset 0 -6px 10px rgba(0,0,0,0.6),
+      0 6px 12px rgba(0,0,0,0.7);
+    margin-top: -4px;
+  }
+
+  /* Anillo del botón hongo (efecto "emergencia") */
+  .btn-base.emergencia {
+    background:
+      radial-gradient(circle at 50% 30%,
+        #ffeb3b 0%,
+        #fbc02d 45%,
+        #f57f17 100%);
+    box-shadow:
+      inset 0 3px 6px rgba(255,255,255,0.5),
+      inset 0 -4px 8px rgba(0,0,0,0.4),
+      0 4px 8px rgba(0,0,0,0.5),
+      0 0 0 4px #333;
+  }
+
+  /* Etiqueta debajo del botón */
+  .btn-label {
+    font-size: 10px;
+    font-weight: bold;
+    color: #222;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 3px 10px;
+    background: linear-gradient(180deg, #f0f0e8, #c8c8c0);
+    border: 1px solid #888;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.8);
+    min-width: 80px;
+  }
+
+  /* ===== SELECTOR ROTATIVO ===== */
+  .selector-rot {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 8px;
-    background: #0f1a24;
-    padding: 10px;
-    border-radius: 40px;
-    border: 2px solid #2c3e50;
-    box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
   }
-  .selector-grupo .btn-industrial { flex: 1; border-radius: 30px; }
+  .selector-base {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 30%,
+        #e8e8e0 0%,
+        #a8a8a0 45%,
+        #707070 100%);
+    box-shadow:
+      inset 0 3px 6px rgba(255,255,255,0.5),
+      inset 0 -4px 8px rgba(0,0,0,0.4),
+      0 4px 8px rgba(0,0,0,0.5),
+      0 0 0 4px #444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
 
-  /* ===== MAQUETA ===== */
+  /* Marcas de las 3 posiciones alrededor del selector */
+  .marca-pos {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #333;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.8);
+  }
+  .marca-pos.m1 { transform: rotate(-120deg) translate(46px, -4px); }
+  .marca-pos.m2 { transform: rotate(0deg)    translate(46px, -4px); }
+  .marca-pos.m3 { transform: rotate(120deg)  translate(46px, -4px); }
+
+  .marca-pos.activa {
+    background: #29b6f6;
+    box-shadow: 0 0 10px #29b6f6, inset 0 1px 2px rgba(0,0,0,0.8);
+  }
+
+  /* Perilla del selector */
+  .perilla {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 30%, #666, #1a1a1a 70%);
+    box-shadow:
+      inset 0 3px 6px rgba(255,255,255,0.2),
+      inset 0 -3px 6px rgba(0,0,0,0.8),
+      0 3px 6px rgba(0,0,0,0.6);
+    position: relative;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  /* Marca blanca indicadora */
+  .perilla::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 15px;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 0 4px rgba(255,255,255,0.8);
+  }
+
+  /* ===== PILOTOS LED ===== */
+  .pilotos {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 10px;
+    background:
+      radial-gradient(ellipse at center, #2a2a2a, #0f0f0f);
+    border-radius: 8px;
+    border: 3px solid #555;
+    box-shadow: inset 0 3px 8px rgba(0,0,0,0.8);
+  }
+
+  .piloto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+  .piloto-led {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    border: 3px solid #444;
+    box-shadow:
+      inset 0 3px 6px rgba(0,0,0,0.8),
+      inset 0 -2px 4px rgba(255,255,255,0.05);
+    position: relative;
+    transition: all 0.2s;
+  }
+  .piloto-led::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 25%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.25), transparent);
+  }
+  .piloto-led.rojo.on {
+    background: radial-gradient(circle at 50% 30%, #ff9999, #f44336 60%, #b71c1c);
+    box-shadow: 0 0 20px #f44336, inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(255,255,255,0.3);
+  }
+  .piloto-led.verde.on {
+    background: radial-gradient(circle at 50% 30%, #a5ffa5, #4caf50 60%, #1b5e20);
+    box-shadow: 0 0 20px #4caf50, inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(255,255,255,0.3);
+  }
+  .piloto-led.ambar.on {
+    background: radial-gradient(circle at 50% 30%, #ffe0a5, #ff9800 60%, #e65100);
+    box-shadow: 0 0 20px #ff9800, inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(255,255,255,0.3);
+  }
+  .piloto-led.azul.on {
+    background: radial-gradient(circle at 50% 30%, #a5d8ff, #2196f3 60%, #0d47a1);
+    box-shadow: 0 0 20px #2196f3, inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(255,255,255,0.3);
+  }
+
+  .piloto-label {
+    font-size: 9px;
+    font-weight: bold;
+    color: #f0f0e8;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 1px 2px #000;
+    text-align: center;
+  }
+
+  /* ============================================================ */
+  /* MAQUETA                                                       */
+  /* ============================================================ */
   .maqueta {
     position: relative;
     background: radial-gradient(ellipse at top, #1a2630 0%, #0a0e12 100%);
@@ -214,7 +491,6 @@
 
   .nodo-svg { fill: url(#gradNodo); stroke: #7d5a00; stroke-width: 3; }
 
-  /* ===== GRIPER ===== */
   .griper-unico {
     position: absolute;
     width: 60px;
@@ -268,7 +544,6 @@
     box-shadow: 0 0 25px #f39c12, 0 4px 10px rgba(0,0,0,0.6);
   }
 
-  /* ===== CAJAS ===== */
   .caja-maqueta {
     position: absolute;
     width: 90px;
@@ -348,7 +623,6 @@
     to   { box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 0 20px rgba(244,67,54,0.8); }
   }
 
-  /* ===== HOME DEL GRIPER (indicador en esquina) ===== */
   .home-griper {
     position: absolute;
     width: 60px;
@@ -371,7 +645,6 @@
     font-weight: bold;
   }
 
-  /* ===== PIEZA VIAJERA ===== */
   .pieza-viajera {
     position: absolute;
     width: 22px;
@@ -393,7 +666,6 @@
     to   { box-shadow: 0 2px 6px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.3), 0 0 15px rgba(79,195,247,0.9); }
   }
 
-  /* ===== ESTADO ===== */
   .estado-panel {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -453,7 +725,6 @@
     to   { box-shadow: 0 0 30px rgba(244,67,54,0.9); }
   }
 
-  /* ===== REGISTROS ===== */
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   th, td { padding: 10px; text-align: left; border-bottom: 1px solid #1e2a35; }
   th {
@@ -496,7 +767,11 @@
   @media (max-width: 700px) {
     .maqueta-svg { height: 420px; }
     .resumen-grid { grid-template-columns: 1fr; }
-    .tablero-grid { grid-template-columns: repeat(2, 1fr); }
+    .btn-base { width: 66px; height: 66px; }
+    .btn-cuerpo { width: 52px; height: 52px; font-size: 8px; }
+    .btn-cuerpo.hongo { width: 58px; height: 58px; }
+    .selector-base { width: 90px; height: 90px; }
+    .perilla { width: 42px; height: 42px; }
   }
 </style>
 </head>
@@ -508,36 +783,129 @@
   <button onclick="cambiarPantalla(3, this)">📋 REGISTROS</button>
 </nav>
 
-<!-- PANTALLA 1 -->
+<!-- ============================================================ -->
+<!-- PANTALLA 1: BOTONERA INDUSTRIAL                              -->
+<!-- ============================================================ -->
 <section id="pantalla1" class="pantalla activa">
-  <div class="tablero">
-    <div class="tablero-header">
-      <h3><span class="led-power"></span>SISTEMA DE CLASIFICACIÓN</h3>
-    </div>
-    <div class="tablero-grid">
-      <button class="btn-industrial btn-arranque" onclick="enviarComando('Arranque', 1)">▶ ARRANQUE</button>
-      <button class="btn-industrial btn-paro" onclick="enviarComando('Paro', 1)">■ PARO</button>
-    </div>
-    <div style="margin-bottom: 20px;">
-      <h2 style="font-size: 11px; color:#90a4ae; margin-bottom:10px; text-transform:uppercase; letter-spacing:2px;">RESETS DE CONTENEDOR</h2>
-      <div class="tablero-grid">
-        <button class="btn-industrial btn-reset" onclick="enviarComando('Reset1', 1)">RESET ALUMINIO</button>
-        <button class="btn-industrial btn-reset" onclick="enviarComando('Reset2', 1)">RESET COBRE</button>
-        <button class="btn-industrial btn-reset" onclick="enviarComando('Reset3', 1)">RESET BRONCE</button>
+  <div class="botonera">
+    <div class="placa-titulo">PLC · CLASIFICADOR DE MATERIALES</div>
+
+    <!-- SECCIÓN: MARCHA / PARO -->
+    <div class="seccion-botonera">
+      <div class="seccion-titulo">Mando Principal</div>
+      <div class="fila-botones" style="grid-template-columns: repeat(2, 1fr); max-width: 400px; margin: 0 auto;">
+
+        <div class="btn-panel" onclick="enviarComando('Arranque', 1)">
+          <div class="btn-base">
+            <div class="btn-cuerpo verde hongo">I<br>ARRANQUE</div>
+          </div>
+          <div class="btn-label">Arranque</div>
+        </div>
+
+        <div class="btn-panel" onclick="enviarComando('Paro', 1)">
+          <div class="btn-base emergencia">
+            <div class="btn-cuerpo rojo hongo">O<br>PARO</div>
+          </div>
+          <div class="btn-label">Paro</div>
+        </div>
+
       </div>
     </div>
-    <div>
-      <h2 style="font-size: 11px; color:#90a4ae; margin-bottom:10px; text-transform:uppercase; letter-spacing:2px;">SELECTOR DE MATERIAL</h2>
-      <div class="selector-grupo">
-        <button class="btn-industrial btn-selector" id="selAluminio" onclick="seleccionarMaterial(1)">ALUMINIO</button>
-        <button class="btn-industrial btn-selector" id="selCobre"    onclick="seleccionarMaterial(2)">COBRE</button>
-        <button class="btn-industrial btn-selector" id="selBronce"   onclick="seleccionarMaterial(3)">BRONCE</button>
+
+    <!-- SECCIÓN: RESETS -->
+    <div class="seccion-botonera">
+      <div class="seccion-titulo">Resets de Contenedor</div>
+      <div class="fila-botones">
+
+        <div class="btn-panel" onclick="enviarComando('Reset1', 1)">
+          <div class="btn-base">
+            <div class="btn-cuerpo ambar">RST<br>AL</div>
+          </div>
+          <div class="btn-label">Reset Aluminio</div>
+        </div>
+
+        <div class="btn-panel" onclick="enviarComando('Reset2', 1)">
+          <div class="btn-base">
+            <div class="btn-cuerpo ambar">RST<br>CU</div>
+          </div>
+          <div class="btn-label">Reset Cobre</div>
+        </div>
+
+        <div class="btn-panel" onclick="enviarComando('Reset3', 1)">
+          <div class="btn-base">
+            <div class="btn-cuerpo ambar">RST<br>BR</div>
+          </div>
+          <div class="btn-label">Reset Bronce</div>
+        </div>
+
       </div>
     </div>
+
+    <!-- SECCIÓN: SELECTOR DE MATERIAL -->
+    <div class="seccion-botonera">
+      <div class="seccion-titulo">Selector de Material</div>
+      <div class="fila-botones">
+
+        <!-- Aluminio -->
+        <div class="btn-panel" onclick="seleccionarMaterial(1)">
+          <div class="btn-base">
+            <div class="btn-cuerpo blanco" id="btnSelAluminio">ALUMINIO</div>
+          </div>
+          <div class="btn-label">Pos. 1</div>
+        </div>
+
+        <!-- Cobre -->
+        <div class="btn-panel" onclick="seleccionarMaterial(2)">
+          <div class="btn-base">
+            <div class="btn-cuerpo blanco" id="btnSelCobre">COBRE</div>
+          </div>
+          <div class="btn-label">Pos. 2</div>
+        </div>
+
+        <!-- Bronce -->
+        <div class="btn-panel" onclick="seleccionarMaterial(3)">
+          <div class="btn-base">
+            <div class="btn-cuerpo blanco" id="btnSelBronce">BRONCE</div>
+          </div>
+          <div class="btn-label">Pos. 3</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECCIÓN: PILOTOS DE ESTADO -->
+    <div class="seccion-botonera">
+      <div class="seccion-titulo">Pilotos Indicadores</div>
+      <div class="pilotos">
+        <div class="piloto">
+          <div class="piloto-led verde" id="piloArranque"></div>
+          <div class="piloto-label">Marcha</div>
+        </div>
+        <div class="piloto">
+          <div class="piloto-led rojo" id="piloParo"></div>
+          <div class="piloto-label">Paro</div>
+        </div>
+        <div class="piloto">
+          <div class="piloto-led azul" id="piloBanda"></div>
+          <div class="piloto-label">Banda</div>
+        </div>
+        <div class="piloto">
+          <div class="piloto-led ambar" id="piloGriper"></div>
+          <div class="piloto-label">Griper</div>
+        </div>
+        <div class="piloto">
+          <div class="piloto-led rojo" id="piloAlarma"></div>
+          <div class="piloto-label">Alarma</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
-<!-- PANTALLA 2 -->
+<!-- ============================================================ -->
+<!-- PANTALLA 2: MAQUETA                                          -->
+<!-- ============================================================ -->
 <section id="pantalla2" class="pantalla">
   <div id="avisoLleno" class="aviso-lleno">⚠ CONTENEDOR LLENO</div>
 
@@ -578,10 +946,8 @@
           <circle cx="400" cy="150" r="8" fill="#7d5a00" opacity="0.6" />
         </svg>
 
-        <!-- Home del griper (indicador visual esquina superior izquierda) -->
         <div class="home-griper" id="homeGriper" style="left: 40px; top: 20px;"></div>
 
-        <!-- Griper único -->
         <div class="griper-unico" id="griperUnico">
           <div class="brazo"></div>
           <div class="pinza"></div>
@@ -615,7 +981,9 @@
   </div>
 </section>
 
-<!-- PANTALLA 3 -->
+<!-- ============================================================ -->
+<!-- PANTALLA 3: REGISTROS                                        -->
+<!-- ============================================================ -->
 <section id="pantalla3" class="pantalla">
   <div class="card">
     <h2>Resumen de Producción</h2>
@@ -649,19 +1017,17 @@ const SVG_H = 500;
 const T_ENTRADA        = 800;
 const T_PAUSA_NODO     = 900;
 const T_RECORRIDO      = 1800;
-const T_GRIPER_VIAJE   = 900;   // ajustado: recorrido más largo (desde esquina)
+const T_GRIPER_VIAJE   = 900;
 const T_GRIPER_PINZA   = 500;
-const T_GRIPER_REGRESO = 900;   // mismo tiempo de vuelta a la esquina
+const T_GRIPER_REGRESO = 900;
 const T_ESPERA_EXTRA   = 200;
 
-/* Coordenadas (unidades SVG) */
 const NODO = { x: 400, y: 150 };
 const DESTINOS = {
   1: { x: 130, y: 320 },
   2: { x: 400, y: 320 },
   3: { x: 670, y: 320 }
 };
-/* HOME del griper: esquina superior izquierda (coordenadas SVG) */
 const HOME = { x: 70, y: 50 };
 
 /* =========================================================
@@ -679,6 +1045,7 @@ function cambiarPantalla(num, btn) {
    ========================================================= */
 const estado = {
   Arranque: 0,
+  Paro: 0,
   BandaActiva: 0,
   GriperActivo: 0,
   Seleccion: 0,
@@ -691,14 +1058,14 @@ const NOMBRES = { 1: 'Aluminio', 2: 'Cobre', 3: 'Bronce' };
 const CLASES  = { 1: 'aluminio', 2: 'cobre', 3: 'bronce' };
 
 /* =========================================================
-   MÁQUINA DE ESTADOS DEL CICLO
+   MÁQUINA DE ESTADOS
    ========================================================= */
 const CICLO = {
-  IDLE:              'IDLE',
-  ESPERANDO_ARRIBO:  'ESPERANDO_ARRIBO',
-  GRIper_VIAJANDO:   'GRIPER_VIAJANDO',
-  GRIper_CLASIFICA:  'GRIPER_CLASIFICA',
-  GRIper_REGRESANDO: 'GRIPER_REGRESANDO'
+  IDLE:             'IDLE',
+  ESPERANDO_ARRIBO: 'ESPERANDO_ARRIBO',
+  GRIper_VIAJANDO:  'GRIPER_VIAJANDO',
+  GRIper_CLASIFICA: 'GRIPER_CLASIFICA',
+  GRIper_REGRESANDO:'GRIPER_REGRESANDO'
 };
 let estadoCiclo = CICLO.IDLE;
 let cicloEnCurso = false;
@@ -720,26 +1087,23 @@ function limpiarTimeouts() {
 function moverGriperA(xSvg, ySvg) {
   const maqueta = document.getElementById('maqueta');
   const griper = document.getElementById('griperUnico');
+  if (!maqueta || !griper) return;
   const r = maqueta.getBoundingClientRect();
   const px = xSvg * (r.width / SVG_W) - 30;
   const py = ySvg * (r.height / SVG_H) - 40;
   griper.style.left = px + 'px';
   griper.style.top  = py + 'px';
 }
+function griperAlHome()      { moverGriperA(HOME.x, HOME.y + 30); }
+function griperAlCarril(num) { moverGriperA(DESTINOS[num].x, DESTINOS[num].y); }
 
-function griperAlHome()       { moverGriperA(HOME.x, HOME.y + 30); }
-function griperAlCarril(num)  { moverGriperA(DESTINOS[num].x, DESTINOS[num].y); }
-
-/* Home en pantalla: posicionar el indicador en la esquina */
 function posicionarIndicadorHome() {
   const maqueta = document.getElementById('maqueta');
   const home = document.getElementById('homeGriper');
   if (!maqueta || !home) return;
   const r = maqueta.getBoundingClientRect();
-  const px = HOME.x * (r.width / SVG_W) - 30;
-  const py = HOME.y * (r.height / SVG_H) - 10;
-  home.style.left = px + 'px';
-  home.style.top  = py + 'px';
+  home.style.left = (HOME.x * (r.width / SVG_W) - 30) + 'px';
+  home.style.top  = (HOME.y * (r.height / SVG_H) - 10) + 'px';
 }
 
 function actualizarEstadoCiclo() {
@@ -761,6 +1125,7 @@ function enviarComando(nombre, valor) {
       return;
     }
     estado.Arranque = 1;
+    estado.Paro = 0;
     estado.BandaActiva = 1;
     actualizarVisual();
     lanzarCiclo(estado.Seleccion);
@@ -768,6 +1133,7 @@ function enviarComando(nombre, valor) {
 
   if (nombre === 'Paro') {
     estado.Arranque = 0;
+    estado.Paro = 1;
     estado.BandaActiva = 0;
     estado.GriperActivo = 0;
     limpiarTimeouts();
@@ -803,10 +1169,18 @@ function resetContador(num) {
 
 function seleccionarMaterial(num) {
   estado.Seleccion = num;
-  document.querySelectorAll('.btn-selector').forEach(b => b.classList.remove('activo'));
-  document.getElementById({1:'selAluminio',2:'selCobre',3:'selBronce'}[num]).classList.add('activo');
   document.getElementById('valSeleccion').textContent = NOMBRES[num];
   enviarComando('SeleccionMaterial', num);
+
+  // Feedback visual: el botón seleccionado se ilumina
+  ['Aluminio', 'Cobre', 'Bronce'].forEach((n, i) => {
+    const el = document.getElementById('btnSel' + n);
+    if (el) {
+      const color = ['verde', 'ambar', 'azul'][i];
+      // Solo el botón seleccionado cambia a su color, los demás vuelven a blanco
+      el.className = 'btn-cuerpo ' + (i + 1 === num ? color : 'blanco');
+    }
+  });
 
   if (estado.Arranque && !cicloEnCurso) {
     if (contadorDe(num) >= MAX_POR_CAJA) {
@@ -824,11 +1198,7 @@ function seleccionarMaterial(num) {
 }
 
 /* =========================================================
-   CICLO COMPLETO
-   =========================================================
-   El griper parte del HOME (esquina sup. izq), viaja al carril,
-   clasifica y regresa al HOME. Todo el ciclo se cierra cuando
-   el griper ya está de vuelta en su home.
+   CICLO — El griper SOLO se mueve cuando la pieza llega al final
    ========================================================= */
 function lanzarCiclo(num) {
   if (cicloEnCurso) return;
@@ -843,10 +1213,10 @@ function lanzarCiclo(num) {
   }
 
   cicloEnCurso = true;
-  estadoCiclo = CICLO.IDLE;
+  estadoCiclo = CICLO.ESPERANDO_ARRIBO;
   actualizarEstadoCiclo();
 
-  /* --- FASE 1: animar la pieza por la banda de entrada y desvío --- */
+  /* --- FASE 1: animar la pieza por la banda --- */
   const maqueta = document.getElementById('maqueta');
   const rutaEntrada = document.getElementById('rutaEntrada');
   const rutaDesvio  = document.getElementById({1:'rutaIzq',2:'rutaCen',3:'rutaDer'}[num]);
@@ -858,6 +1228,8 @@ function lanzarCiclo(num) {
   maqueta.appendChild(pieza);
 
   const t0 = performance.now();
+  // Tiempo total del recorrido de la pieza
+  const tTotalPieza = T_ENTRADA + T_PAUSA_NODO + T_RECORRIDO;
 
   function animar(now) {
     if (!pieza.parentNode) return;
@@ -875,11 +1247,7 @@ function lanzarCiclo(num) {
     } else if (t < T_ENTRADA + T_PAUSA_NODO) {
       p = { x: NODO.x, y: NODO.y };
       pieza.classList.add('esperando');
-      if (estadoCiclo !== CICLO.ESPERANDO_ARRIBO) {
-        estadoCiclo = CICLO.ESPERANDO_ARRIBO;
-        actualizarEstadoCiclo();
-      }
-    } else if (t < T_ENTRADA + T_PAUSA_NODO + T_RECORRIDO) {
+    } else if (t < tTotalPieza) {
       pieza.classList.remove('esperando');
       const prog = (t - T_ENTRADA - T_PAUSA_NODO) / T_RECORRIDO;
       p = rutaDesvio.getPointAtLength(prog * totalDesvio);
@@ -894,53 +1262,55 @@ function lanzarCiclo(num) {
   }
   requestAnimationFrame(animar);
 
-  /* --- FASE 2: griper sale del HOME hacia el carril --- */
-  // Debe llegar justo cuando la pieza va a salir del nodo.
-  const tSalidaGriper = T_ENTRADA + T_PAUSA_NODO - T_GRIPER_VIAJE;
+  /* --- FASE 2: cuando la pieza LLEGA al final del desvío, entonces el griper se mueve --- */
+  // El griper se mueve JUSTO cuando la pieza termina su recorrido por el desvío.
   programar(() => {
     if (!cicloEnCurso) return;
+
     estadoCiclo = CICLO.GRIper_VIAJANDO;
     actualizarEstadoCiclo();
     griperAlCarril(num);
-  }, tSalidaGriper);
 
-  /* --- FASE 3: la pinza clasifica --- */
-  const tPinza = T_ENTRADA + T_PAUSA_NODO + T_RECORRIDO;
-  programar(() => {
-    if (!cicloEnCurso) return;
-    estadoCiclo = CICLO.GRIper_CLASIFICA;
-    actualizarEstadoCiclo();
-    estado.GriperActivo = 1;
-    actualizarVisual();
-    const griper = document.getElementById('griperUnico');
-    griper.classList.add('activo');
-
+    // Después de que el griper llegue al carril, baja la pinza
     programar(() => {
-      griper.classList.remove('activo');
-      estado.GriperActivo = 0;
-      actualizarVisual();
-      almacenar(num);
-
-      /* --- FASE 4: griper regresa al HOME --- */
-      estadoCiclo = CICLO.GRIper_REGRESANDO;
+      if (!cicloEnCurso) return;
+      estadoCiclo = CICLO.GRIper_CLASIFICA;
       actualizarEstadoCiclo();
-      programar(() => {
-        griperAlHome();
-      }, 150);
+      estado.GriperActivo = 1;
+      actualizarVisual();
+      const griper = document.getElementById('griperUnico');
+      griper.classList.add('activo');
 
-      /* --- FASE 5: cerrar ciclo cuando ya está en HOME --- */
+      // Pinza baja/clasifica
       programar(() => {
-        cicloEnCurso = false;
-        estadoCiclo = CICLO.IDLE;
+        griper.classList.remove('activo');
+        estado.GriperActivo = 0;
+        actualizarVisual();
+        almacenar(num);
+
+        // Regresa al HOME
+        estadoCiclo = CICLO.GRIper_REGRESANDO;
         actualizarEstadoCiclo();
-        if (estado.Arranque && estado.BandaActiva === 1 && estado.Seleccion === num) {
-          if (contadorDe(num) < MAX_POR_CAJA) {
-            programar(() => lanzarCiclo(num), T_ESPERA_EXTRA);
+        programar(() => {
+          griperAlHome();
+        }, 150);
+
+        // Cerrar el ciclo cuando el griper ya está de vuelta
+        programar(() => {
+          cicloEnCurso = false;
+          estadoCiclo = CICLO.IDLE;
+          actualizarEstadoCiclo();
+
+          if (estado.Arranque && estado.BandaActiva === 1 && estado.Seleccion === num) {
+            if (contadorDe(num) < MAX_POR_CAJA) {
+              programar(() => lanzarCiclo(num), T_ESPERA_EXTRA);
+            }
           }
-        }
-      }, T_GRIPER_REGRESO + T_ESPERA_EXTRA);
-    }, T_GRIPER_PINZA);
-  }, tPinza);
+        }, T_GRIPER_REGRESO + T_ESPERA_EXTRA);
+
+      }, T_GRIPER_PINZA);
+    }, T_GRIPER_VIAJE);
+  }, tTotalPieza); // ← Se dispara justo cuando la pieza llega a la caja
 }
 
 /* =========================================================
@@ -976,9 +1346,10 @@ function almacenar(num) {
 }
 
 /* =========================================================
-   VISUAL
+   VISUAL (LEDs + PILOTOS de botonera)
    ========================================================= */
 function actualizarVisual() {
+  // LEDs del panel de estado
   document.getElementById('ledArranque').className = 'led' + (estado.Arranque ? ' on' : '');
   document.getElementById('valArranque').textContent = estado.Arranque ? 'ON' : 'OFF';
 
@@ -988,10 +1359,30 @@ function actualizarVisual() {
   document.getElementById('ledGriper').className = 'led ambar' + (estado.GriperActivo ? ' on' : '');
   document.getElementById('valGriper').textContent = estado.GriperActivo ? 'ACTIVO' : 'OFF';
 
+  // Marca animada de las bandas
   const activa = estado.BandaActiva === 1;
   ['marcasEntrada', 'marcasIzq', 'marcasCen', 'marcasDer'].forEach(id => {
-    document.getElementById(id).classList.toggle('activa', activa);
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('activa', activa);
   });
+
+  // ---- PILOTOS de la botonera ----
+  const piloArranque = document.getElementById('piloArranque');
+  const piloParo = document.getElementById('piloParo');
+  const piloBanda = document.getElementById('piloBanda');
+  const piloGriper = document.getElementById('piloGriper');
+  const piloAlarma = document.getElementById('piloAlarma');
+
+  if (piloArranque) piloArranque.classList.toggle('on', estado.Arranque === 1);
+  if (piloParo)     piloParo.classList.toggle('on', estado.Paro === 1 && estado.Arranque === 0);
+  if (piloBanda)    piloBanda.classList.toggle('on', estado.BandaActiva === 1);
+  if (piloGriper)   piloGriper.classList.toggle('on', estado.GriperActivo === 1);
+
+  // Alarma: encendida si algún contenedor está lleno
+  if (piloAlarma) {
+    const hayLleno = [1,2,3].some(n => contadorDe(n) >= MAX_POR_CAJA);
+    piloAlarma.classList.toggle('on', hayLleno);
+  }
 }
 
 /* =========================================================
@@ -1022,7 +1413,7 @@ function registrarEvento(material, valor) {
 }
 
 /* =========================================================
-   POLLING AL PLC
+   POLLING AL PLC (descomentar al conectar)
    ========================================================= */
 async function leerVariable(nombre) {
   try {
@@ -1031,7 +1422,6 @@ async function leerVariable(nombre) {
     return await r.text();
   } catch (e) { return null; }
 }
-
 async function actualizarDatos() {
   const vars = ['ContadorAluminio','ContadorCobre','ContadorBronce','BandaActiva','GriperActivo','Arranque'];
   for (const v of vars) {
@@ -1073,7 +1463,7 @@ window.addEventListener('load', () => {
   actualizarEstadoCiclo();
 });
 
-console.log("HMI lista. Home del griper en esquina superior izquierda.");
+console.log("HMI lista. Botonera industrial + griper reactivo.");
 </script>
 
 </body>
