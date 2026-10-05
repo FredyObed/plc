@@ -15,12 +15,40 @@
     min-height: 100vh;
   }
 
+  /* ============================================================ */
+  /* LOGO INSTITUCIONAL (esquina superior derecha)               */
+  /* ============================================================ */
+  .logo-institucional {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    width: 90px;
+    height: 90px;
+    z-index: 100;
+    background: #fff;
+    border-radius: 50%;
+    padding: 4px;
+    box-shadow:
+      0 4px 12px rgba(0,0,0,0.5),
+      0 0 0 2px rgba(79,195,247,0.3);
+    transition: transform 0.3s;
+    pointer-events: none;
+    user-select: none;
+  }
+  .logo-institucional img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
   nav {
     display: flex;
     gap: 5px;
     margin-bottom: 15px;
     background: linear-gradient(180deg, #2c3e50, #1a252f);
     padding: 6px;
+    padding-right: 110px; /* espacio para el logo */
     border-radius: 8px;
     border: 1px solid #34495e;
     box-shadow: 0 4px 10px rgba(0,0,0,0.5);
@@ -69,12 +97,9 @@
     font-weight: 600;
   }
 
-  /* ============================================================ */
-  /* BOTONERA INDUSTRIAL                                           */
-  /* ============================================================ */
+  /* ===== BOTONERA ===== */
   .botonera {
-    background:
-      linear-gradient(180deg, #d8d8d0 0%, #b8b8b0 100%);
+    background: linear-gradient(180deg, #d8d8d0 0%, #b8b8b0 100%);
     border-radius: 10px;
     padding: 20px;
     border: 3px solid #888;
@@ -85,7 +110,6 @@
     position: relative;
     color: #222;
   }
-  /* Textura de placa metálica */
   .botonera::before {
     content: '';
     position: absolute;
@@ -97,8 +121,6 @@
         rgba(0,0,0,0.03) 2px 4px);
     pointer-events: none;
   }
-
-  /* Título de placa */
   .placa-titulo {
     text-align: center;
     font-family: 'Consolas', monospace;
@@ -115,8 +137,6 @@
     text-transform: uppercase;
     box-shadow: inset 0 1px 2px rgba(255,255,255,0.8), 0 2px 4px rgba(0,0,0,0.2);
   }
-
-  /* Secciones dentro de la botonera */
   .seccion-botonera {
     border-top: 2px solid #999;
     border-bottom: 1px solid #e8e8e0;
@@ -136,8 +156,6 @@
     border-left: 4px solid #666;
     display: inline-block;
   }
-
-  /* Layout de la botonera */
   .fila-botones {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -145,8 +163,6 @@
     justify-items: center;
     align-items: start;
   }
-
-  /* ===== BOTÓN INDUSTRIAL (tipo hongo) ===== */
   .btn-panel {
     display: flex;
     flex-direction: column;
@@ -157,18 +173,13 @@
     transition: transform 0.1s;
   }
   .btn-panel:active { transform: scale(0.96); }
-
-  /* Base del pulsador (cuerpo metálico) */
   .btn-base {
     position: relative;
     width: 78px;
     height: 78px;
     border-radius: 50%;
-    background:
-      radial-gradient(circle at 50% 30%,
-        #e8e8e0 0%,
-        #a8a8a0 45%,
-        #707070 100%);
+    background: radial-gradient(circle at 50% 30%,
+        #e8e8e0 0%, #a8a8a0 45%, #707070 100%);
     box-shadow:
       inset 0 3px 6px rgba(255,255,255,0.5),
       inset 0 -4px 8px rgba(0,0,0,0.4),
@@ -178,8 +189,6 @@
     align-items: center;
     justify-content: center;
   }
-
-  /* Cuerpo del botón (donde va el color) */
   .btn-cuerpo {
     width: 62px;
     height: 62px;
@@ -202,55 +211,31 @@
     padding: 4px;
     line-height: 1.1;
   }
-
-  /* Reflejo superior del botón */
   .btn-cuerpo::before {
     content: '';
     position: absolute;
-    top: 6px;
-    left: 50%;
+    top: 6px; left: 50%;
     transform: translateX(-50%);
-    width: 45%;
-    height: 22%;
+    width: 45%; height: 22%;
     border-radius: 50%;
-    background: radial-gradient(ellipse at center,
-      rgba(255,255,255,0.6),
-      transparent 70%);
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.6), transparent 70%);
     pointer-events: none;
   }
-
-  /* Colores industriales */
-  .btn-cuerpo.verde {
-    background: radial-gradient(circle at 50% 30%, #7cff7c, #22a022 60%, #0a5a0a);
-  }
-  .btn-cuerpo.rojo {
-    background: radial-gradient(circle at 50% 30%, #ff7c7c, #d02020 60%, #7a0a0a);
-  }
-  .btn-cuerpo.ambar {
-    background: radial-gradient(circle at 50% 30%, #ffd47c, #e09000 60%, #8a4a00);
-  }
-  .btn-cuerpo.azul {
-    background: radial-gradient(circle at 50% 30%, #7cc4ff, #1565c0 60%, #0a3a6e);
-  }
-  .btn-cuerpo.negro {
-    background: radial-gradient(circle at 50% 30%, #666, #222 60%, #000);
-    color: #fff;
-  }
+  .btn-cuerpo.verde  { background: radial-gradient(circle at 50% 30%, #7cff7c, #22a022 60%, #0a5a0a); }
+  .btn-cuerpo.rojo   { background: radial-gradient(circle at 50% 30%, #ff7c7c, #d02020 60%, #7a0a0a); }
+  .btn-cuerpo.ambar  { background: radial-gradient(circle at 50% 30%, #ffd47c, #e09000 60%, #8a4a00); }
+  .btn-cuerpo.azul   { background: radial-gradient(circle at 50% 30%, #7cc4ff, #1565c0 60%, #0a3a6e); }
   .btn-cuerpo.blanco {
     background: radial-gradient(circle at 50% 30%, #ffffff, #d0d0c8 60%, #909090);
     color: #222;
     text-shadow: none;
   }
-
-  /* Efecto al presionar (el botón se hunde) */
   .btn-panel:active .btn-cuerpo {
     box-shadow:
       inset 0 3px 8px rgba(0,0,0,0.6),
       inset 0 -2px 4px rgba(255,255,255,0.3),
       0 1px 2px rgba(0,0,0,0.6);
   }
-
-  /* Botón tipo hongo (más grande y salido) */
   .btn-cuerpo.hongo {
     width: 68px;
     height: 68px;
@@ -260,22 +245,15 @@
       0 6px 12px rgba(0,0,0,0.7);
     margin-top: -4px;
   }
-
-  /* Anillo del botón hongo (efecto "emergencia") */
   .btn-base.emergencia {
-    background:
-      radial-gradient(circle at 50% 30%,
-        #ffeb3b 0%,
-        #fbc02d 45%,
-        #f57f17 100%);
+    background: radial-gradient(circle at 50% 30%,
+        #ffeb3b 0%, #fbc02d 45%, #f57f17 100%);
     box-shadow:
       inset 0 3px 6px rgba(255,255,255,0.5),
       inset 0 -4px 8px rgba(0,0,0,0.4),
       0 4px 8px rgba(0,0,0,0.5),
       0 0 0 4px #333;
   }
-
-  /* Etiqueta debajo del botón */
   .btn-label {
     font-size: 10px;
     font-weight: bold;
@@ -291,97 +269,18 @@
     min-width: 80px;
   }
 
-  /* ===== SELECTOR ROTATIVO ===== */
-  .selector-rot {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-  .selector-base {
-    position: relative;
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    background:
-      radial-gradient(circle at 50% 30%,
-        #e8e8e0 0%,
-        #a8a8a0 45%,
-        #707070 100%);
-    box-shadow:
-      inset 0 3px 6px rgba(255,255,255,0.5),
-      inset 0 -4px 8px rgba(0,0,0,0.4),
-      0 4px 8px rgba(0,0,0,0.5),
-      0 0 0 4px #444;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-
-  /* Marcas de las 3 posiciones alrededor del selector */
-  .marca-pos {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background: #333;
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    transform-origin: 0 0;
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.8);
-  }
-  .marca-pos.m1 { transform: rotate(-120deg) translate(46px, -4px); }
-  .marca-pos.m2 { transform: rotate(0deg)    translate(46px, -4px); }
-  .marca-pos.m3 { transform: rotate(120deg)  translate(46px, -4px); }
-
-  .marca-pos.activa {
-    background: #29b6f6;
-    box-shadow: 0 0 10px #29b6f6, inset 0 1px 2px rgba(0,0,0,0.8);
-  }
-
-  /* Perilla del selector */
-  .perilla {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background:
-      radial-gradient(circle at 50% 30%, #666, #1a1a1a 70%);
-    box-shadow:
-      inset 0 3px 6px rgba(255,255,255,0.2),
-      inset 0 -3px 6px rgba(0,0,0,0.8),
-      0 3px 6px rgba(0,0,0,0.6);
-    position: relative;
-    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  /* Marca blanca indicadora */
-  .perilla::after {
-    content: '';
-    position: absolute;
-    top: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 5px;
-    height: 15px;
-    background: #fff;
-    border-radius: 2px;
-    box-shadow: 0 0 4px rgba(255,255,255,0.8);
-  }
-
-  /* ===== PILOTOS LED ===== */
+  /* ===== PILOTOS ===== */
   .pilotos {
     display: flex;
     gap: 14px;
     justify-content: center;
     flex-wrap: wrap;
     padding: 10px;
-    background:
-      radial-gradient(ellipse at center, #2a2a2a, #0f0f0f);
+    background: radial-gradient(ellipse at center, #2a2a2a, #0f0f0f);
     border-radius: 8px;
     border: 3px solid #555;
     box-shadow: inset 0 3px 8px rgba(0,0,0,0.8);
   }
-
   .piloto {
     display: flex;
     flex-direction: column;
@@ -403,31 +302,16 @@
   .piloto-led::before {
     content: '';
     position: absolute;
-    top: 4px;
-    left: 50%;
+    top: 4px; left: 50%;
     transform: translateX(-50%);
-    width: 40%;
-    height: 25%;
+    width: 40%; height: 25%;
     border-radius: 50%;
     background: radial-gradient(ellipse, rgba(255,255,255,0.25), transparent);
   }
-  .piloto-led.rojo.on {
-    background: radial-gradient(circle at 50% 30%, #ff9999, #f44336 60%, #b71c1c);
-    box-shadow: 0 0 20px #f44336, inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(255,255,255,0.3);
-  }
-  .piloto-led.verde.on {
-    background: radial-gradient(circle at 50% 30%, #a5ffa5, #4caf50 60%, #1b5e20);
-    box-shadow: 0 0 20px #4caf50, inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(255,255,255,0.3);
-  }
-  .piloto-led.ambar.on {
-    background: radial-gradient(circle at 50% 30%, #ffe0a5, #ff9800 60%, #e65100);
-    box-shadow: 0 0 20px #ff9800, inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(255,255,255,0.3);
-  }
-  .piloto-led.azul.on {
-    background: radial-gradient(circle at 50% 30%, #a5d8ff, #2196f3 60%, #0d47a1);
-    box-shadow: 0 0 20px #2196f3, inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(255,255,255,0.3);
-  }
-
+  .piloto-led.rojo.on  { background: radial-gradient(circle at 50% 30%, #ff9999, #f44336 60%, #b71c1c); box-shadow: 0 0 20px #f44336, inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(255,255,255,0.3); }
+  .piloto-led.verde.on { background: radial-gradient(circle at 50% 30%, #a5ffa5, #4caf50 60%, #1b5e20); box-shadow: 0 0 20px #4caf50, inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(255,255,255,0.3); }
+  .piloto-led.ambar.on { background: radial-gradient(circle at 50% 30%, #ffe0a5, #ff9800 60%, #e65100); box-shadow: 0 0 20px #ff9800, inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(255,255,255,0.3); }
+  .piloto-led.azul.on  { background: radial-gradient(circle at 50% 30%, #a5d8ff, #2196f3 60%, #0d47a1); box-shadow: 0 0 20px #2196f3, inset 0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(255,255,255,0.3); }
   .piloto-label {
     font-size: 9px;
     font-weight: bold;
@@ -438,9 +322,7 @@
     text-align: center;
   }
 
-  /* ============================================================ */
-  /* MAQUETA                                                       */
-  /* ============================================================ */
+  /* ===== MAQUETA ===== */
   .maqueta {
     position: relative;
     background: radial-gradient(ellipse at top, #1a2630 0%, #0a0e12 100%);
@@ -459,7 +341,6 @@
     background-size: 30px 30px;
     pointer-events: none;
   }
-
   .maqueta-svg {
     position: relative;
     width: 100%;
@@ -472,7 +353,6 @@
     width: 100%; height: 100%;
     z-index: 1;
   }
-
   .banda-base  { fill: none; stroke: #34495e; stroke-width: 30; stroke-linecap: round; stroke-linejoin: round; }
   .banda-inner { fill: none; stroke: #1a1a1a; stroke-width: 22; stroke-linecap: round; stroke-linejoin: round; }
   .banda-marcas {
@@ -488,7 +368,6 @@
     animation: banda-mover 0.9s linear infinite;
   }
   @keyframes banda-mover { to { stroke-dashoffset: -25; } }
-
   .nodo-svg { fill: url(#gradNodo); stroke: #7d5a00; stroke-width: 3; }
 
   .griper-unico {
@@ -502,22 +381,18 @@
   }
   .griper-unico .brazo {
     position: absolute;
-    top: 0;
-    left: 50%;
+    top: 0; left: 50%;
     transform: translateX(-50%);
-    width: 8px;
-    height: 35px;
+    width: 8px; height: 35px;
     background: linear-gradient(90deg, #555, #aaa, #555);
     border-radius: 3px;
     transition: height 0.3s;
   }
   .griper-unico .pinza {
     position: absolute;
-    bottom: 15px;
-    left: 50%;
+    bottom: 15px; left: 50%;
     transform: translateX(-50%);
-    width: 44px;
-    height: 26px;
+    width: 44px; height: 26px;
     background: linear-gradient(180deg, #f39c12, #b9770e);
     border: 2px solid #7d5a00;
     border-radius: 6px 6px 12px 12px;
@@ -529,15 +404,13 @@
     content: '';
     position: absolute;
     bottom: -8px;
-    width: 8px;
-    height: 14px;
+    width: 8px; height: 14px;
     background: #d68910;
     border: 1px solid #7d5a00;
     border-radius: 0 0 3px 3px;
   }
   .griper-unico .pinza::before { left: 6px; }
   .griper-unico .pinza::after  { right: 6px; }
-
   .griper-unico.activo .brazo { height: 55px; }
   .griper-unico.activo .pinza {
     bottom: -5px;
@@ -546,8 +419,7 @@
 
   .caja-maqueta {
     position: absolute;
-    width: 90px;
-    height: 110px;
+    width: 90px; height: 110px;
     background: linear-gradient(180deg, #2a3a4a, #16202a);
     border: 3px solid #4a5c70;
     border-top: none;
@@ -566,8 +438,7 @@
   }
   .caja-maqueta .label {
     position: absolute;
-    top: 10px;
-    left: 50%;
+    top: 10px; left: 50%;
     transform: translateX(-50%);
     font-size: 9px;
     font-weight: bold;
@@ -578,7 +449,6 @@
   .caja-maqueta.aluminio .label { color: #cfd8dc; }
   .caja-maqueta.cobre .label    { color: #ff8a65; }
   .caja-maqueta.bronce .label   { color: #ffd54f; }
-
   .caja-maqueta .contenido {
     position: absolute;
     bottom: 0; left: 0; right: 0;
@@ -599,11 +469,9 @@
   .caja-maqueta.aluminio .pieza { background: linear-gradient(135deg, #cfd8dc, #78909c); }
   .caja-maqueta.cobre .pieza    { background: linear-gradient(135deg, #ff8a65, #bf360c); }
   .caja-maqueta.bronce .pieza   { background: linear-gradient(135deg, #ffd54f, #f57f17); }
-
   .caja-maqueta .contador {
     position: absolute;
-    bottom: 6px;
-    right: 6px;
+    bottom: 6px; right: 6px;
     background: rgba(0,0,0,0.8);
     padding: 1px 6px;
     border-radius: 3px;
@@ -625,8 +493,7 @@
 
   .home-griper {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 60px; height: 60px;
     border: 2px dashed #4fc3f7;
     border-radius: 8px;
     z-index: 3;
@@ -636,8 +503,7 @@
   .home-griper::before {
     content: 'HOME';
     position: absolute;
-    bottom: -18px;
-    left: 50%;
+    bottom: -18px; left: 50%;
     transform: translateX(-50%);
     font-size: 9px;
     color: #4fc3f7;
@@ -647,8 +513,7 @@
 
   .pieza-viajera {
     position: absolute;
-    width: 22px;
-    height: 22px;
+    width: 22px; height: 22px;
     border-radius: 4px;
     z-index: 8;
     box-shadow: 0 2px 6px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.3);
@@ -765,17 +630,31 @@
   }
 
   @media (max-width: 700px) {
+    .logo-institucional {
+      width: 60px;
+      height: 60px;
+      top: 8px;
+      right: 8px;
+    }
+    nav {
+      padding-right: 80px;
+    }
     .maqueta-svg { height: 420px; }
     .resumen-grid { grid-template-columns: 1fr; }
     .btn-base { width: 66px; height: 66px; }
     .btn-cuerpo { width: 52px; height: 52px; font-size: 8px; }
     .btn-cuerpo.hongo { width: 58px; height: 58px; }
-    .selector-base { width: 90px; height: 90px; }
-    .perilla { width: 42px; height: 42px; }
   }
 </style>
 </head>
 <body>
+
+<!-- ============================================================ -->
+<!-- LOGO INSTITUCIONAL (esquina superior derecha, fijo)          -->
+<!-- ============================================================ -->
+<div class="logo-institucional">
+  <img src="logo.png" alt="Instituto Tecnológico de Puebla">
+</div>
 
 <nav>
   <button class="activo" onclick="cambiarPantalla(1, this)">⚙ CONTROL</button>
@@ -783,129 +662,79 @@
   <button onclick="cambiarPantalla(3, this)">📋 REGISTROS</button>
 </nav>
 
-<!-- ============================================================ -->
-<!-- PANTALLA 1: BOTONERA INDUSTRIAL                              -->
-<!-- ============================================================ -->
+<!-- PANTALLA 1: BOTONERA INDUSTRIAL -->
 <section id="pantalla1" class="pantalla activa">
   <div class="botonera">
     <div class="placa-titulo">PLC · CLASIFICADOR DE MATERIALES</div>
 
-    <!-- SECCIÓN: MARCHA / PARO -->
     <div class="seccion-botonera">
       <div class="seccion-titulo">Mando Principal</div>
       <div class="fila-botones" style="grid-template-columns: repeat(2, 1fr); max-width: 400px; margin: 0 auto;">
-
         <div class="btn-panel" onclick="enviarComando('Arranque', 1)">
           <div class="btn-base">
             <div class="btn-cuerpo verde hongo">I<br>ARRANQUE</div>
           </div>
           <div class="btn-label">Arranque</div>
         </div>
-
         <div class="btn-panel" onclick="enviarComando('Paro', 1)">
           <div class="btn-base emergencia">
             <div class="btn-cuerpo rojo hongo">O<br>PARO</div>
           </div>
           <div class="btn-label">Paro</div>
         </div>
-
       </div>
     </div>
 
-    <!-- SECCIÓN: RESETS -->
     <div class="seccion-botonera">
       <div class="seccion-titulo">Resets de Contenedor</div>
       <div class="fila-botones">
-
         <div class="btn-panel" onclick="enviarComando('Reset1', 1)">
-          <div class="btn-base">
-            <div class="btn-cuerpo ambar">RST<br>AL</div>
-          </div>
+          <div class="btn-base"><div class="btn-cuerpo ambar">RST<br>AL</div></div>
           <div class="btn-label">Reset Aluminio</div>
         </div>
-
         <div class="btn-panel" onclick="enviarComando('Reset2', 1)">
-          <div class="btn-base">
-            <div class="btn-cuerpo ambar">RST<br>CU</div>
-          </div>
+          <div class="btn-base"><div class="btn-cuerpo ambar">RST<br>CU</div></div>
           <div class="btn-label">Reset Cobre</div>
         </div>
-
         <div class="btn-panel" onclick="enviarComando('Reset3', 1)">
-          <div class="btn-base">
-            <div class="btn-cuerpo ambar">RST<br>BR</div>
-          </div>
+          <div class="btn-base"><div class="btn-cuerpo ambar">RST<br>BR</div></div>
           <div class="btn-label">Reset Bronce</div>
         </div>
-
       </div>
     </div>
 
-    <!-- SECCIÓN: SELECTOR DE MATERIAL -->
     <div class="seccion-botonera">
       <div class="seccion-titulo">Selector de Material</div>
       <div class="fila-botones">
-
-        <!-- Aluminio -->
         <div class="btn-panel" onclick="seleccionarMaterial(1)">
-          <div class="btn-base">
-            <div class="btn-cuerpo blanco" id="btnSelAluminio">ALUMINIO</div>
-          </div>
+          <div class="btn-base"><div class="btn-cuerpo blanco" id="btnSelAluminio">ALUMINIO</div></div>
           <div class="btn-label">Pos. 1</div>
         </div>
-
-        <!-- Cobre -->
         <div class="btn-panel" onclick="seleccionarMaterial(2)">
-          <div class="btn-base">
-            <div class="btn-cuerpo blanco" id="btnSelCobre">COBRE</div>
-          </div>
+          <div class="btn-base"><div class="btn-cuerpo blanco" id="btnSelCobre">COBRE</div></div>
           <div class="btn-label">Pos. 2</div>
         </div>
-
-        <!-- Bronce -->
         <div class="btn-panel" onclick="seleccionarMaterial(3)">
-          <div class="btn-base">
-            <div class="btn-cuerpo blanco" id="btnSelBronce">BRONCE</div>
-          </div>
+          <div class="btn-base"><div class="btn-cuerpo blanco" id="btnSelBronce">BRONCE</div></div>
           <div class="btn-label">Pos. 3</div>
         </div>
-
       </div>
     </div>
 
-    <!-- SECCIÓN: PILOTOS DE ESTADO -->
     <div class="seccion-botonera">
       <div class="seccion-titulo">Pilotos Indicadores</div>
       <div class="pilotos">
-        <div class="piloto">
-          <div class="piloto-led verde" id="piloArranque"></div>
-          <div class="piloto-label">Marcha</div>
-        </div>
-        <div class="piloto">
-          <div class="piloto-led rojo" id="piloParo"></div>
-          <div class="piloto-label">Paro</div>
-        </div>
-        <div class="piloto">
-          <div class="piloto-led azul" id="piloBanda"></div>
-          <div class="piloto-label">Banda</div>
-        </div>
-        <div class="piloto">
-          <div class="piloto-led ambar" id="piloGriper"></div>
-          <div class="piloto-label">Griper</div>
-        </div>
-        <div class="piloto">
-          <div class="piloto-led rojo" id="piloAlarma"></div>
-          <div class="piloto-label">Alarma</div>
-        </div>
+        <div class="piloto"><div class="piloto-led verde" id="piloArranque"></div><div class="piloto-label">Marcha</div></div>
+        <div class="piloto"><div class="piloto-led rojo"  id="piloParo"></div>    <div class="piloto-label">Paro</div></div>
+        <div class="piloto"><div class="piloto-led azul"  id="piloBanda"></div>   <div class="piloto-label">Banda</div></div>
+        <div class="piloto"><div class="piloto-led ambar" id="piloGriper"></div>  <div class="piloto-label">Griper</div></div>
+        <div class="piloto"><div class="piloto-led rojo"  id="piloAlarma"></div>  <div class="piloto-label">Alarma</div></div>
       </div>
     </div>
-
   </div>
 </section>
 
-<!-- ============================================================ -->
-<!-- PANTALLA 2: MAQUETA                                          -->
-<!-- ============================================================ -->
+<!-- PANTALLA 2: MAQUETA -->
 <section id="pantalla2" class="pantalla">
   <div id="avisoLleno" class="aviso-lleno">⚠ CONTENEDOR LLENO</div>
 
@@ -919,7 +748,6 @@
               <stop offset="0%" stop-color="#ffcc80"/>
               <stop offset="100%" stop-color="#b9770e"/>
             </radialGradient>
-
             <path id="rutaEntrada" d="M 400 30 L 400 150" />
             <path id="rutaIzq" d="M 400 150 Q 400 200 250 220 Q 130 235 130 290 L 130 340" />
             <path id="rutaCen" d="M 400 150 L 400 340" />
@@ -981,9 +809,7 @@
   </div>
 </section>
 
-<!-- ============================================================ -->
-<!-- PANTALLA 3: REGISTROS                                        -->
-<!-- ============================================================ -->
+<!-- PANTALLA 3: REGISTROS -->
 <section id="pantalla3" class="pantalla">
   <div class="card">
     <h2>Resumen de Producción</h2>
@@ -1013,7 +839,6 @@ const MAX_POR_CAJA = 5;
 const SVG_W = 800;
 const SVG_H = 500;
 
-/* Tiempos (ms) */
 const T_ENTRADA        = 800;
 const T_PAUSA_NODO     = 900;
 const T_RECORRIDO      = 1800;
@@ -1030,42 +855,20 @@ const DESTINOS = {
 };
 const HOME = { x: 70, y: 50 };
 
-/* =========================================================
-   NAVEGACIÓN
-   ========================================================= */
-function cambiarPantalla(num, btn) {
-  document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('activo'));
-  document.getElementById('pantalla' + num).classList.add('activa');
-  btn.classList.add('activo');
-}
-
-/* =========================================================
-   ESTADO GLOBAL
-   ========================================================= */
 const estado = {
-  Arranque: 0,
-  Paro: 0,
-  BandaActiva: 0,
-  GriperActivo: 0,
-  Seleccion: 0,
-  ContadorAluminio: 0,
-  ContadorCobre: 0,
-  ContadorBronce: 0
+  Arranque: 0, Paro: 0,
+  BandaActiva: 0, GriperActivo: 0, Seleccion: 0,
+  ContadorAluminio: 0, ContadorCobre: 0, ContadorBronce: 0
 };
 
 const NOMBRES = { 1: 'Aluminio', 2: 'Cobre', 3: 'Bronce' };
 const CLASES  = { 1: 'aluminio', 2: 'cobre', 3: 'bronce' };
 
-/* =========================================================
-   MÁQUINA DE ESTADOS
-   ========================================================= */
 const CICLO = {
-  IDLE:             'IDLE',
-  ESPERANDO_ARRIBO: 'ESPERANDO_ARRIBO',
-  GRIper_VIAJANDO:  'GRIPER_VIAJANDO',
+  IDLE: 'IDLE', ESPERANDO_ARRIBO: 'ESPERANDO_ARRIBO',
+  GRIper_VIAJANDO: 'GRIPER_VIAJANDO',
   GRIper_CLASIFICA: 'GRIPER_CLASIFICA',
-  GRIper_REGRESANDO:'GRIPER_REGRESANDO'
+  GRIper_REGRESANDO: 'GRIPER_REGRESANDO'
 };
 let estadoCiclo = CICLO.IDLE;
 let cicloEnCurso = false;
@@ -1081,18 +884,20 @@ function limpiarTimeouts() {
   timeoutsActivos = [];
 }
 
-/* =========================================================
-   UTILIDADES SVG
-   ========================================================= */
+function cambiarPantalla(num, btn) {
+  document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('activo'));
+  document.getElementById('pantalla' + num).classList.add('activa');
+  btn.classList.add('activo');
+}
+
 function moverGriperA(xSvg, ySvg) {
   const maqueta = document.getElementById('maqueta');
   const griper = document.getElementById('griperUnico');
   if (!maqueta || !griper) return;
   const r = maqueta.getBoundingClientRect();
-  const px = xSvg * (r.width / SVG_W) - 30;
-  const py = ySvg * (r.height / SVG_H) - 40;
-  griper.style.left = px + 'px';
-  griper.style.top  = py + 'px';
+  griper.style.left = (xSvg * (r.width / SVG_W) - 30) + 'px';
+  griper.style.top  = (ySvg * (r.height / SVG_H) - 40) + 'px';
 }
 function griperAlHome()      { moverGriperA(HOME.x, HOME.y + 30); }
 function griperAlCarril(num) { moverGriperA(DESTINOS[num].x, DESTINOS[num].y); }
@@ -1111,9 +916,6 @@ function actualizarEstadoCiclo() {
   if (el) el.textContent = estadoCiclo;
 }
 
-/* =========================================================
-   COMANDOS
-   ========================================================= */
 function enviarComando(nombre, valor) {
   console.log("→", `${BASE_URL}?${nombre}=${valor}`);
 
@@ -1161,10 +963,7 @@ function resetContador(num) {
   document.getElementById('reg' + NOMBRES[num]).textContent = '0';
   document.getElementById('caja' + NOMBRES[num]).classList.remove('llena');
   verificarAviso();
-
-  if (!cicloEnCurso && estado.Arranque && estado.Seleccion === num) {
-    lanzarCiclo(num);
-  }
+  if (!cicloEnCurso && estado.Arranque && estado.Seleccion === num) lanzarCiclo(num);
 }
 
 function seleccionarMaterial(num) {
@@ -1172,12 +971,10 @@ function seleccionarMaterial(num) {
   document.getElementById('valSeleccion').textContent = NOMBRES[num];
   enviarComando('SeleccionMaterial', num);
 
-  // Feedback visual: el botón seleccionado se ilumina
   ['Aluminio', 'Cobre', 'Bronce'].forEach((n, i) => {
     const el = document.getElementById('btnSel' + n);
     if (el) {
       const color = ['verde', 'ambar', 'azul'][i];
-      // Solo el botón seleccionado cambia a su color, los demás vuelven a blanco
       el.className = 'btn-cuerpo ' + (i + 1 === num ? color : 'blanco');
     }
   });
@@ -1197,9 +994,6 @@ function seleccionarMaterial(num) {
   }
 }
 
-/* =========================================================
-   CICLO — El griper SOLO se mueve cuando la pieza llega al final
-   ========================================================= */
 function lanzarCiclo(num) {
   if (cicloEnCurso) return;
   if (!estado.Arranque) return;
@@ -1216,7 +1010,6 @@ function lanzarCiclo(num) {
   estadoCiclo = CICLO.ESPERANDO_ARRIBO;
   actualizarEstadoCiclo();
 
-  /* --- FASE 1: animar la pieza por la banda --- */
   const maqueta = document.getElementById('maqueta');
   const rutaEntrada = document.getElementById('rutaEntrada');
   const rutaDesvio  = document.getElementById({1:'rutaIzq',2:'rutaCen',3:'rutaDer'}[num]);
@@ -1228,22 +1021,18 @@ function lanzarCiclo(num) {
   maqueta.appendChild(pieza);
 
   const t0 = performance.now();
-  // Tiempo total del recorrido de la pieza
   const tTotalPieza = T_ENTRADA + T_PAUSA_NODO + T_RECORRIDO;
 
   function animar(now) {
     if (!pieza.parentNode) return;
-
     const r = maqueta.getBoundingClientRect();
     const eX = r.width / SVG_W;
     const eY = r.height / SVG_H;
     const t = now - t0;
-
     let p;
 
     if (t < T_ENTRADA) {
-      const prog = t / T_ENTRADA;
-      p = rutaEntrada.getPointAtLength(prog * totalEntrada);
+      p = rutaEntrada.getPointAtLength((t / T_ENTRADA) * totalEntrada);
     } else if (t < T_ENTRADA + T_PAUSA_NODO) {
       p = { x: NODO.x, y: NODO.y };
       pieza.classList.add('esperando');
@@ -1255,23 +1044,18 @@ function lanzarCiclo(num) {
       pieza.remove();
       return;
     }
-
     pieza.style.left = (p.x * eX - 11) + 'px';
     pieza.style.top  = (p.y * eY - 11) + 'px';
     requestAnimationFrame(animar);
   }
   requestAnimationFrame(animar);
 
-  /* --- FASE 2: cuando la pieza LLEGA al final del desvío, entonces el griper se mueve --- */
-  // El griper se mueve JUSTO cuando la pieza termina su recorrido por el desvío.
   programar(() => {
     if (!cicloEnCurso) return;
-
     estadoCiclo = CICLO.GRIper_VIAJANDO;
     actualizarEstadoCiclo();
     griperAlCarril(num);
 
-    // Después de que el griper llegue al carril, baja la pinza
     programar(() => {
       if (!cicloEnCurso) return;
       estadoCiclo = CICLO.GRIper_CLASIFICA;
@@ -1281,51 +1065,39 @@ function lanzarCiclo(num) {
       const griper = document.getElementById('griperUnico');
       griper.classList.add('activo');
 
-      // Pinza baja/clasifica
       programar(() => {
         griper.classList.remove('activo');
         estado.GriperActivo = 0;
         actualizarVisual();
         almacenar(num);
 
-        // Regresa al HOME
         estadoCiclo = CICLO.GRIper_REGRESANDO;
         actualizarEstadoCiclo();
-        programar(() => {
-          griperAlHome();
-        }, 150);
+        programar(() => griperAlHome(), 150);
 
-        // Cerrar el ciclo cuando el griper ya está de vuelta
         programar(() => {
           cicloEnCurso = false;
           estadoCiclo = CICLO.IDLE;
           actualizarEstadoCiclo();
-
           if (estado.Arranque && estado.BandaActiva === 1 && estado.Seleccion === num) {
             if (contadorDe(num) < MAX_POR_CAJA) {
               programar(() => lanzarCiclo(num), T_ESPERA_EXTRA);
             }
           }
         }, T_GRIPER_REGRESO + T_ESPERA_EXTRA);
-
       }, T_GRIPER_PINZA);
     }, T_GRIPER_VIAJE);
-  }, tTotalPieza); // ← Se dispara justo cuando la pieza llega a la caja
+  }, tTotalPieza);
 }
 
-/* =========================================================
-   ALMACENAR
-   ========================================================= */
 function almacenar(num) {
   const nombre = NOMBRES[num];
   const key = 'Contador' + nombre;
   const contMap = { 1: 'contAluminio', 2: 'contCobre', 3: 'contBronce' };
-
   if (estado[key] >= MAX_POR_CAJA) return;
 
   estado[key]++;
   document.getElementById(key).textContent = estado[key];
-
   const cont = document.getElementById(contMap[num]);
   const p = document.createElement('div');
   p.className = 'pieza';
@@ -1345,49 +1117,35 @@ function almacenar(num) {
   }
 }
 
-/* =========================================================
-   VISUAL (LEDs + PILOTOS de botonera)
-   ========================================================= */
 function actualizarVisual() {
-  // LEDs del panel de estado
   document.getElementById('ledArranque').className = 'led' + (estado.Arranque ? ' on' : '');
   document.getElementById('valArranque').textContent = estado.Arranque ? 'ON' : 'OFF';
-
   document.getElementById('ledBanda').className = 'led' + (estado.BandaActiva ? ' on' : '');
   document.getElementById('valBanda').textContent = estado.BandaActiva ? 'EN MARCHA' : 'DETENIDA';
-
   document.getElementById('ledGriper').className = 'led ambar' + (estado.GriperActivo ? ' on' : '');
   document.getElementById('valGriper').textContent = estado.GriperActivo ? 'ACTIVO' : 'OFF';
 
-  // Marca animada de las bandas
   const activa = estado.BandaActiva === 1;
   ['marcasEntrada', 'marcasIzq', 'marcasCen', 'marcasDer'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.toggle('activa', activa);
   });
 
-  // ---- PILOTOS de la botonera ----
   const piloArranque = document.getElementById('piloArranque');
-  const piloParo = document.getElementById('piloParo');
-  const piloBanda = document.getElementById('piloBanda');
-  const piloGriper = document.getElementById('piloGriper');
-  const piloAlarma = document.getElementById('piloAlarma');
-
+  const piloParo     = document.getElementById('piloParo');
+  const piloBanda    = document.getElementById('piloBanda');
+  const piloGriper   = document.getElementById('piloGriper');
+  const piloAlarma   = document.getElementById('piloAlarma');
   if (piloArranque) piloArranque.classList.toggle('on', estado.Arranque === 1);
   if (piloParo)     piloParo.classList.toggle('on', estado.Paro === 1 && estado.Arranque === 0);
   if (piloBanda)    piloBanda.classList.toggle('on', estado.BandaActiva === 1);
   if (piloGriper)   piloGriper.classList.toggle('on', estado.GriperActivo === 1);
-
-  // Alarma: encendida si algún contenedor está lleno
   if (piloAlarma) {
     const hayLleno = [1,2,3].some(n => contadorDe(n) >= MAX_POR_CAJA);
     piloAlarma.classList.toggle('on', hayLleno);
   }
 }
 
-/* =========================================================
-   AVISOS
-   ========================================================= */
 function mostrarAviso(texto) {
   const aviso = document.getElementById('avisoLleno');
   aviso.textContent = '⚠ ' + texto;
@@ -1398,9 +1156,6 @@ function verificarAviso() {
   if (!hayLleno) document.getElementById('avisoLleno').classList.remove('visible');
 }
 
-/* =========================================================
-   HISTORIAL
-   ========================================================= */
 function registrarEvento(material, valor) {
   const tbody = document.getElementById('tablaHistorial');
   const vacio = tbody.querySelector('.vacio');
@@ -1412,50 +1167,12 @@ function registrarEvento(material, valor) {
   while (tbody.rows.length > 20) tbody.deleteRow(-1);
 }
 
-/* =========================================================
-   POLLING AL PLC (descomentar al conectar)
-   ========================================================= */
-async function leerVariable(nombre) {
-  try {
-    const r = await fetch(`${BASE_URL}?${nombre}`);
-    if (!r.ok) throw new Error();
-    return await r.text();
-  } catch (e) { return null; }
-}
-async function actualizarDatos() {
-  const vars = ['ContadorAluminio','ContadorCobre','ContadorBronce','BandaActiva','GriperActivo','Arranque'];
-  for (const v of vars) {
-    const val = await leerVariable(v);
-    if (val !== null) {
-      const n = parseInt(val);
-      if (!isNaN(n)) estado[v] = n;
-    }
-  }
-  ['Aluminio','Cobre','Bronce'].forEach(nombre => {
-    const k = 'Contador' + nombre;
-    document.getElementById(k).textContent = estado[k];
-    document.getElementById('reg' + nombre).textContent = estado[k];
-    if (estado[k] >= MAX_POR_CAJA) document.getElementById('caja' + nombre).classList.add('llena');
-  });
-  actualizarVisual();
-}
-// setInterval(actualizarDatos, 800);
-
-/* =========================================================
-   RESIZE
-   ========================================================= */
 window.addEventListener('resize', () => {
   posicionarIndicadorHome();
-  if (estadoCiclo === CICLO.IDLE) {
-    griperAlHome();
-  } else if (estado.Seleccion > 0) {
-    griperAlCarril(estado.Seleccion);
-  }
+  if (estadoCiclo === CICLO.IDLE) griperAlHome();
+  else if (estado.Seleccion > 0) griperAlCarril(estado.Seleccion);
 });
 
-/* =========================================================
-   INICIALIZACIÓN
-   ========================================================= */
 window.addEventListener('load', () => {
   posicionarIndicadorHome();
   griperAlHome();
@@ -1463,7 +1180,7 @@ window.addEventListener('load', () => {
   actualizarEstadoCiclo();
 });
 
-console.log("HMI lista. Botonera industrial + griper reactivo.");
+console.log("HMI lista. Logo ITP integrado.");
 </script>
 
 </body>
